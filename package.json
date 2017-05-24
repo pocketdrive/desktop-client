@@ -1,0 +1,14 @@
+{
+  "name": "desktop-client",
+  "version": "1.0.0",
+  "description": "Windows, Linux & Mac client for Pocket Drive",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DVios",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.2.1"
+  }
+}
