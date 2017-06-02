@@ -6,7 +6,7 @@ let options = {
 
 let mount = function (shareName, user, password) {
 
-    let command = 'mount -t cifs -o username=' + user + ',password=' + password + ' ' + src + ' ~/';
+    let command = 'mount -t cifs -o username=' + user + ',password=' + password + ' ' + shareName + ' ~/' + user;
 
     sudo.exec(command, options, function(error, stdout, stderr) {});
 }
