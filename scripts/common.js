@@ -5,7 +5,7 @@ let login = function () {
 
     $.ajax({
         type: "POST",
-        url: "http://192.168.8.103/dulaj/paths.php/login",
+        url: "http://" + host + "/dulaj/paths.php/login",
         // The key needs to match your method's input parameter (case-sensitive).
         data: JSON.stringify({ username:username, password:password }),
         contentType: "application/json; charset=utf-8",
