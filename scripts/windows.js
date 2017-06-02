@@ -5,10 +5,10 @@ let options = {
     icns: '/Applications/Electron.app/Contents/Resources/Electron.icns',
 };
 
-let mount = function (shareName, user, password) {
+let mount = function (host, shareName, user, password) {
+    shareName = '\\\\' + host + '\\' + shareName;
 
     let command = 'net use * ' + shareName +  ' /user:' + user + ' ' + password;
-    console.log(command);
 
     exec(command, function(error, stdout, stderr){
         if(error){

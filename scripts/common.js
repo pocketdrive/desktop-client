@@ -12,8 +12,7 @@ let login = function () {
         dataType: "json",
         success: function(data){
             if(data.success === true){
-                let shareName = '\\\\' + host + '\\' + data.sharename;
-                mount(shareName, data.user, data.password);
+                mount(host, data.sharename, data.user, data.password);
             } else{
                 alert('Server error occurred');
             }
