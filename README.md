@@ -7,7 +7,7 @@
 
 ### Install Electron
 
-    npm install -g electron-prebuilt
+    npm install -g electron
     
 Check whether your electron works correctly
 
