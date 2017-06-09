@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Pocket Drive</title>
+    <title>Pocket Drive - Sign in</title>
 
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 
@@ -13,6 +13,8 @@
     <!-- normal script imports etc  -->
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="main.js"></script>
 
     <script>
         let platform = require('os').platform()
@@ -43,15 +45,15 @@
 <form>
     <div class="form-group">
         <label for="host">Host</label>
-        <input type="text" class="form-control" id="host" value="54.68.99.106">
+        <input type="text" class="form-control" id="host" value="192.168.8.103">
     </div>
     <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" class="form-control" id="username">
+        <input type="text" class="form-control" id="username" value="dulaj">
     </div>
     <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password">
+        <input type="password" class="form-control" id="password" value="1">
     </div>
     <button class="btn btn-primary" onclick="return login()">Submit</button>
 </form>

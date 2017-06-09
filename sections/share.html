@@ -1,0 +1,120 @@
+<template class="task-template">
+    <section id="share-section" class="section js-section u-category-windows">
+        <header class="section-header">
+            <div class="section-wrapper">
+                <h4>Sharing Panel</h4>
+            </div>
+        </header>
+
+        <div class="demo padded" style="padding-left: 10px; padding-right: 10px;">
+            <ol id="navigator" class="breadcrumb"></ol>
+
+            <table class="table table-hover" id="folderTable">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Owner</th>
+                    <th>Permission</th>
+                </tr>
+                </thead>
+                <tbody id="folderTableBody"></tbody>
+            </table>
+        </div>
+
+        <script>
+            let paths = [];
+
+            let test = function () {
+                alert('asvd');
+            }
+
+            let updatePath = function (name, data) {
+                paths.push({"name": name, "data": data});
+
+                let navigator = document.getElementById('navigator');
+                while (navigator.firstChild) {
+                    navigator.removeChild(navigator.firstChild);
+                }
+
+                for (let i = 0; i < paths.length; i++) {
+                    let li = document.createElement('li');
+                    li.id += i;
+                    let a = document.createElement('a');
+                    a.href += "#";
+                    a.appendChild(document.createTextNode(paths[i]['name']));
+                    li.appendChild(a);
+                    navigator.appendChild(li);
+                }
+
+                $('ol li').click(function () {
+                    let id = $(this).attr('id');
+                    buildFolderTable(paths[id]['data']);
+                    let noOfItemsToRemove = paths.length - id - 1;
+
+                    let tmp = [];
+                    for (let i = 0; i <= id; i++) {
+                        tmp[i] = paths[i];
+                        console.log(id);
+                    }
+                    paths = tmp;
+
+                    for (let i = 0; i < noOfItemsToRemove; i++) {
+                        navigator.removeChild(navigator.lastChild);
+                    }
+                });
+            }
+
+            let buildFolderTable = function (data) {
+                let oldTableBody = document.getElementById('folderTableBody');
+                let newTableBody = document.createElement('tbody');
+                newTableBody.id += 'folderTableBody';
+                for (let i = 0; i < data.length; i++) {
+                    let tr = document.createElement('tr');
+                    tr.id += i;
+                    tr.className += "clickable-row";
+
+                    let td = document.createElement('td');
+                    td.appendChild(document.createTextNode(data[i]['name']));
+                    tr.appendChild(td);
+
+                    td = document.createElement('td');
+                    td.appendChild(document.createTextNode(data[i]['owner']));
+                    tr.appendChild(td);
+
+                    td = document.createElement('td');
+                    td.appendChild(document.createTextNode(data[i]['permission']));
+                    tr.appendChild(td);
+
+                    newTableBody.appendChild(tr);
+                    newTableBody.ondblclick = "dbc()";
+                }
+
+                oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
+
+                $('#folderTable').on('click', '.clickable-row', function (event) {
+                    $(this).addClass('active').siblings().removeClass('active');
+                });
+
+                $("tr").dblclick(function () {
+                    updatePath(data[$(this).attr('id')]['name'], data[$(this).attr('id')]['children']);
+                    buildFolderTable(data[$(this).attr('id')]['children']);
+                });
+            }
+
+            //noinspection JSUnusedLocalSymbols
+            let buildSharePage = function (data) {
+                updatePath("Pocket Drive", data);
+                buildFolderTable(data);
+            }
+
+        </script>
+
+        <script type="text/javascript">
+            require('./renderer-process/windows/create-window')
+            require('./renderer-process/windows/manage-window')
+            require('./renderer-process/windows/using-window-events')
+            require('./renderer-process/windows/frameless-window')
+        </script>
+
+    </section>
+</template>

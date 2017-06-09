@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/nativize.css">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/about.css">
+    <link rel="stylesheet" href="assets/css/nav.css">
+    <link rel="stylesheet" href="assets/css/section.css">
+    <link rel="stylesheet" href="assets/css/demo.css">
+    <link rel="stylesheet" href="assets/css/github.css">
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <!-- normal script imports etc  -->
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="main.js"></script>
+
+    <script>
+        let platform = require('os').platform()
+
+        let head = document.getElementsByTagName('head')[0];
+        let script = document.createElement('script');
+        script.type = 'text/javascript';
+
+        if (platform === 'win32') {
+            script.src = 'scripts/windows.js';
+        } else if (platform === 'linux') {
+            script.src = 'scripts/linux.js';
+        }
+
+        head.appendChild(script)
+    </script>
+
+    <script src="scripts/common.js"></script>
+
+    <script type="text/javascript">
+        angular.module('FileManagerApp', ['angular-electron']).config(['fileManagerConfigProvider', function (config) {
+            alert('b');
+            var defaults = config.$get();
+            config.set({
+                appName: 'angular-filemanager',
+                pickCallback: function(item) {
+                    var msg = 'Picked %s "%s" for external use'
+                        .replace('%s', item.type)
+                        .replace('%s', item.fullPath());
+                    window.alert(msg);
+                },
+
+                allowedActions: angular.extend(defaults.allowedActions, {
+                    pickFiles: true,
+                    pickFolders: false,
+                }),
+            });
+        }]);
+    </script>
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+
+    <link rel="import" href="sections/explorer.html">
+    <link rel="import" href="sections/sync.html">
+    <link rel="import" href="sections/share.html">
+
+</head>
+<body>
+
+<nav class="nav js-nav">
+
+    <div class="nav-item u-category-windows">
+        <button type="button" id="button-explorer" data-section="explorer" class="nav-button">Explore</button>
+        <button type="button" id="button-share" data-section="share" class="nav-button">Share</button>
+        <button type="button" id="button-sync" data-section="sync" class="nav-button">Sync</button>
+    </div>
+
+</nav>
+
+<main class="content js-content"></main>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "http://" + '192.168.8.103' + ":3000/folder-list?username=dulaj",
+            dataType: "json",
+            success: function (data) {
+                buildSharePage(data);
+            },
+
+            error: function () {
+                alert("Error while connecting to remote device");
+            }
+
+        });
+    });
+</script>
+
+<script>
+    require('./assets/imports')
+    require('./assets/ex-links')
+    require('./assets/nav')
+    require('./assets/demo-btns')
+    require('./assets/code-blocks')
+    require('./assets/normalize-shortcuts')
+</script>
+</body>
+</html>

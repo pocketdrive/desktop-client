@@ -5,24 +5,21 @@ let options = {
     icns: '/Applications/Electron.app/Contents/Resources/Electron.icns',
 };
 
-let mount = function (host, shareName, user, password) {
+let mount = function (host, shareName, user, password, callBack) {
     shareName = '\\\\' + host + '\\' + shareName;
 
-    let command = 'net use * ' + shareName +  ' /user:' + user + ' ' + password;
+    let command = 'net use * ' + shareName + ' /user:' + user + ' ' + password;
 
-    exec(command, function(error, stdout, stderr){
-        if(error){
-            alert(stderr);
-        } else{
-            alert("Mount success");
-        }
+    exec(command, function (error, stdout, stderr) {
+        callBack(error);
     });
 }
 
-var unmount = function() {
+var unmount = function () {
     let dest = document.getElementById('dest').value;
 
     let command = 'umount ' + dest;
 
-    sudo.exec(command, options, function(error, stdout, stderr) {});
+    sudo.exec(command, options, function (error, stdout, stderr) {
+    });
 }
