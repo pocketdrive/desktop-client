@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>Pocket Drive - Sign in</title>
@@ -8,7 +7,10 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 
     <!-- Insert this line above script imports  -->
-    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
 
     <!-- normal script imports etc  -->
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -41,22 +43,22 @@
 
 <body>
 <div class="col-sm-6 col-sm-offset-3">
-<h2 class="text-center">Sign in</h2>
-<form>
-    <div class="form-group">
-        <label for="host">Host</label>
-        <input type="text" class="form-control" id="host" value="192.168.8.103">
-    </div>
-    <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" value="dulaj">
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" value="1">
-    </div>
-    <button class="btn btn-primary" onclick="return login()">Submit</button>
-</form>
+    <h2 class="text-center">Sign in</h2>
+    <form>
+        <div class="form-group">
+            <label for="host">Host</label>
+            <input type="text" class="form-control" id="host" value="192.168.8.103">
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" value="dulaj">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" value="du123">
+        </div>
+        <button class="btn btn-primary" onclick="return login()">Submit</button>
+    </form>
 </div>
 </body>
 

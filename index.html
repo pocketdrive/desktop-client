@@ -15,13 +15,14 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 
     <!-- Insert this line above script imports  -->
-    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
 
     <!-- normal script imports etc  -->
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-    <script src="main.js"></script>
 
     <script>
         let platform = require('os').platform()
@@ -47,7 +48,7 @@
             var defaults = config.$get();
             config.set({
                 appName: 'angular-filemanager',
-                pickCallback: function(item) {
+                pickCallback: function (item) {
                     var msg = 'Picked %s "%s" for external use'
                         .replace('%s', item.type)
                         .replace('%s', item.fullPath());
@@ -85,20 +86,40 @@
 <main class="content js-content"></main>
 
 <script>
+    let host;
+
     $(document).ready(function () {
-        $.ajax({
-            type: "GET",
-            url: "http://" + '192.168.8.103' + ":3000/folder-list?username=dulaj",
-            dataType: "json",
-            success: function (data) {
-                buildSharePage(data);
-            },
+        // Load the host from the local storage
+        let host;
+        let username;
 
-            error: function () {
-                alert("Error while connecting to remote device");
+        //noinspection ES6ModulesDependencies
+        storage.getMany(['host', 'username'], function (error, data) {
+            if (error) {
+                alert("Error occurred while reading " + key + " from local storage");
+                console.log("Error occurred while reading " + key + " from local storage");
+                console.log(error);
+            } else {
+                host =  data.host;
+                username = data.username;
+
+                // Get the folder list for sharing UI.
+                $.ajax({
+                    type: "GET",
+                    url: "http://" + host + ":3000/folder-list?username=" + username,
+                    dataType: "json",
+                    success: function (data) {
+                        buildSharePage(data);
+                    },
+
+                    error: function () {
+                        alert("Error while connecting to remote device");
+                    }
+
+                });
             }
-
         });
+
     });
 </script>
 

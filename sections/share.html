@@ -22,11 +22,44 @@
         </div>
 
         <script>
-            let paths = [];
+            const {remote} = require('electron');
+            const {Menu, MenuItem} = remote;
 
-            let test = function () {
-                alert('asvd');
+            $('#folderTable').on('contextmenu', 'tr', function (e) {
+                let id = this.id;
+                e.preventDefault();
+
+                let menu1 = new Menu();
+                menu1.append(new MenuItem({
+                    label: 'Share', click () {
+                        openShareDialog(id);
+                    }
+                }));
+
+                menu1.popup(remote.getCurrentWindow());
+            });
+
+        </script>
+
+        <script>
+            let openShareDialog = function (id) {
+                const BrowserWindow = require('electron').remote.BrowserWindow
+                const path = require('path')
+
+                const modalPath = path.join('file://', __dirname, '/share_dialog.html')
+                let win = new BrowserWindow({width: 480, height: 360})
+                win.setMenu(null);
+                win.on('close', function () {
+                    win = null
+                })
+                win.loadURL(modalPath)
+                win.show()
             }
+
+        </script>
+
+        <script>
+            let paths = [];
 
             let updatePath = function (name, data) {
                 paths.push({"name": name, "data": data});

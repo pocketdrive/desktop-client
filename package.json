@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "angular-electron": "^0.2.1",
+    "electron-json-storage": "^3.0.5",
     "electron-settings": "^3.0.7",
     "electron-shortcut-normalizer": "^1.0.0",
     "glob": "^7.1.0",
