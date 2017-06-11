@@ -87,12 +87,11 @@
 
 <script>
     let host;
+    let username;
+    let sharePageFolderData;
 
     $(document).ready(function () {
         // Load the host from the local storage
-        let host;
-        let username;
-
         //noinspection ES6ModulesDependencies
         storage.getMany(['host', 'username'], function (error, data) {
             if (error) {
@@ -100,7 +99,7 @@
                 console.log("Error occurred while reading " + key + " from local storage");
                 console.log(error);
             } else {
-                host =  data.host;
+                host = data.host;
                 username = data.username;
 
                 // Get the folder list for sharing UI.
@@ -109,6 +108,7 @@
                     url: "http://" + host + ":3000/folder-list?username=" + username,
                     dataType: "json",
                     success: function (data) {
+                        sharePageFolderData = data;
                         buildSharePage(data);
                     },
 

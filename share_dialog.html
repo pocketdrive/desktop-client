@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Share Dialog</title>
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+
+</head>
+<body>
+<div style="padding: 20px 10px 10px;">
+    <form>
+        <div class="form-group">
+            <input type="text" class="form-control" id="username" placeholder="Enter username">
+        </div>
+        <div class="pull-right">
+            <div id="permissionBtnGrp" class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Can Edit
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Can Edit</a></li>
+                    <li><a href="#">Can View</a></li>
+                </ul>
+            </div>
+            <button id="doneBtn" type="button" class="btn btn-primary">Done</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const electron = require('electron');
+    const ipc = electron.ipcRenderer;
+    const remote = electron.remote;
+    let data;
+
+    ipc.on('data', (event, message) => {
+        data = message;
+    })
+
+    $('#permissionBtnGrp ul li a').on('click', function () {
+        let v = $(this).text();
+        $('#permissionBtnGrp button').text(v);
+    })
+
+    $('#doneBtn').on('click', function () {
+        let inputData = {
+            'username_from': data.username_from,
+            'username_to': $('#username').val(),
+            'path': data.path,
+            'folder_name': data.folder_name,
+            'permission': ($('#permissionBtnGrp button').text() === 'Can Edit') ? 'w' : 'r',
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "http://" + data.host + ":3000/share-folder",
+            data: JSON.stringify(inputData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.success === true) {
+                    alert('success');
+                } else {
+                    alert('Server error occurred');
+                    console.log(JSON.stringify(data));
+                }
+            },
+            error: function () {
+                alert("Error while connecting to remote device");
+            }
+
+        });
+    })
+
+</script>
+</body>
+</html>

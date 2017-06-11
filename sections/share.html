@@ -48,10 +48,19 @@
 
                 const modalPath = path.join('file://', __dirname, '/share_dialog.html')
                 let win = new BrowserWindow({width: 480, height: 360})
-                win.setMenu(null);
+//                win.setMenu(null);
                 win.on('close', function () {
                     win = null
                 })
+                let shareData = {
+                    'host': host,
+                    'username_from': username,
+                    'path': currentTableData[id]['path'],
+                    'folder_name': currentTableData[id]['name']
+                }
+                win.webContents.on('did-finish-load', () => {
+                    win.webContents.send('data', shareData);
+                });
                 win.loadURL(modalPath)
                 win.show()
             }
@@ -60,6 +69,7 @@
 
         <script>
             let paths = [];
+            let currentTableData;
 
             let updatePath = function (name, data) {
                 paths.push({"name": name, "data": data});
@@ -98,6 +108,7 @@
             }
 
             let buildFolderTable = function (data) {
+                currentTableData = data;
                 let oldTableBody = document.getElementById('folderTableBody');
                 let newTableBody = document.createElement('tbody');
                 newTableBody.id += 'folderTableBody';
