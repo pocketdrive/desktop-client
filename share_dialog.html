@@ -71,7 +71,8 @@
             dataType: "json",
             success: function (data) {
                 if (data.success === true) {
-                    alert('success');
+                    console.log('Sharing success');
+                    remote.getCurrentWindow().close();
                 } else {
                     alert('Server error occurred');
                     console.log(JSON.stringify(data));

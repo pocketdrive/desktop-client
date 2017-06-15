@@ -1,21 +1,17 @@
 <template class="task-template">
-  <section id="sync-section" class="section js-section u-category-windows">
-    <header class="section-header">
-      <div class="section-wrapper">
-        <h4>Synchronization Manager</h4>
-      </div>
-    </header>
+    <section id="sync-section" class="section js-section u-category-windows">
+        <header class="section-header">
+            <div class="section-wrapper">
+                <h4>Synchronization Manager</h4>
+            </div>
+        </header>
 
-    <div class="demo">
-        <!--your code goes here-->
-    </div>
+        <script type="text/javascript">
+            require('./renderer-process/windows/create-window')
+            require('./renderer-process/windows/manage-window')
+            require('./renderer-process/windows/using-window-events')
+            require('./renderer-process/windows/frameless-window')
+        </script>
 
-    <script type="text/javascript">
-      require('./renderer-process/windows/create-window')
-      require('./renderer-process/windows/manage-window')
-      require('./renderer-process/windows/using-window-events')
-      require('./renderer-process/windows/frameless-window')
-    </script>
-
-  </section>
+    </section>
 </template>
