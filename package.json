@@ -44,16 +44,11 @@
     "standard": "^8.2.0"
   },
   "dependencies": {
-    "angular-electron": "^0.2.1",
     "electron-json-storage": "^3.0.5",
     "electron-settings": "^3.0.7",
     "electron-shortcut-normalizer": "^1.0.0",
     "glob": "^7.1.0",
-    "highlight.js": "^9.3.0",
-    "jquery": "^3.2.1",
-    "simple-peer": "^8.1.0",
-    "wrtc": "0.0.62",
-    "ws": "^3.0.0"
+    "highlight.js": "^9.3.0"
   },
   "standard": {
     "env": {
