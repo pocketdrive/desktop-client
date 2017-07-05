@@ -26,4 +26,4 @@ Run following commands inside the root folder of the project where package.json 
     
 Run the app
 
-    electron ./main.js
+    npm start
