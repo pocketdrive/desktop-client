@@ -3,7 +3,20 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
+import * as _ from 'lodash';
+// import { Client } from 'node-ssdp';
+
 import { PocketDrive } from "../models/pocketdrive";
+
+const PDS = {
+  local : [
+    { uuid: '0001', name: 'Ground Floor', ip: '192.168.8.2', port:3000 },
+    { uuid: '0003', name: 'Top Floor', ip: '192.168.8.5', port:3000 }
+  ],
+  remote : [
+    { uuid: '0001', name: 'Home Device', ip: '192.168.8.2', port:3000 }
+  ]
+}
 
 @Injectable()
 export class PocketDriveService {
@@ -11,18 +24,22 @@ export class PocketDriveService {
   private headers = new Headers({'Content-Type': 'application/json'});
   private url = 'api/discover-pd';
 
-  constructor(private http: Http) { }
+  localPDs: PocketDrive[];
+  remotePDs: PocketDrive[];
 
-  discoverPds(): Promise<PocketDrive[]> {
-    return this.http.get(this.url)  
-               .toPromise()
-               .then(response => response.json() as PocketDrive[])
-               .catch(this.handleError);
+  constructor(private http: Http) {
+    this.localPDs = PDS.local;
+    this.remotePDs = PDS.remote;
   }
 
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+  getPD(type: string, uuid: string): PocketDrive {
+    if(type == 'local'){
+      return this.localPDs.find(pd => pd.uuid === uuid);
+    }
+
+    if(type == 'remote'){
+      return this.remotePDs.find(pd => pd.uuid === uuid);
+    }
   }
 
   /*private listenForPDs(){

@@ -7,7 +7,7 @@ import {Routes, RouterModule} from '@angular/router';
 
 const routes: Routes = [
   { path: '', component: SplashComponent },
-  { path: 'signin', component: SigninComponent },
+  { path: 'signin/:type/:uuid', component: SigninComponent },
   { path: 'selectpd', component: SelectpdComponent }
 ];
 

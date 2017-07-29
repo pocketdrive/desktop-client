@@ -3,16 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { PocketDrive } from "../models/pocketdrive";
 import { PocketDriveService } from "../providers/pd.service";
 
-const PDS = {
-  local : [
-    { uuid: '0001', name: 'Ground Floor', ip: '192.168.8.2', port:3000 },
-    { uuid: '0003', name: 'Top Floor', ip: '192.168.8.5', port:3000 }
-  ],
-  remote : [
-    { uuid: '0001', name: 'Home Device', ip: '192.168.8.2', port:3000 }
-  ]
-}
-
 @Component({
   selector: 'app-selectpd',
   templateUrl: './selectpd.component.html',
@@ -21,17 +11,16 @@ const PDS = {
 
 export class SelectpdComponent implements OnInit {
 
-   localPds : PocketDrive[];
-   remotePds : PocketDrive[];
+  constructor(private pocketDriveService: PocketDriveService) { }
 
-  constructor(private pocketDriverService: PocketDriveService) { }
+  ngOnInit() {}
 
-  ngOnInit() {
-    // this.pocketDriverService.discoverPds()
-    //   .then(pds => this.pds);
+  get localPds():PocketDrive[] { 
+    return this.pocketDriveService.localPDs; 
+  } 
 
-    this.localPds = PDS.local;
-    this.remotePds = PDS.remote;
-  }
+  get remotePds():PocketDrive[] { 
+    return this.pocketDriveService.remotePDs; 
+  } 
 
 }
