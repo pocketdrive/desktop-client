@@ -1,16 +1,16 @@
 <div class="col-sm-4 col-sm-offset-4">
     <h2 class="text-center">Sign in</h2>
-    <div class="center-horizontal">
+    <div class="center-horizontal" style="margin-top: 40px;">
         <img src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
         <p>{{selectedPD.name}}</p>
         <p>{{selectedPD.ip}}</p>
     </div>
     <form style="margin-top: 25px;">
         <div class="form-group">
-            <input type="text" class="form-control" id="username" placeholder="Username">
+            <input type="text" name="username" class="form-control" [(ngModel)]="username" placeholder="Username">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" id="password" placeholder="Password">
+            <input type="password" name="password" class="form-control" [(ngModel)]="password" placeholder="Password">
         </div>
         <button class="btn btn-primary" (click)="signIn()" style="float: right; margin-left: 5px;">Submit</button>
         <button class="btn btn-default" (click)="goBack()" style="float: right;">Cancel</button>

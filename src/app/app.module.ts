@@ -13,10 +13,7 @@ import { SplashComponent } from './splash/splash.component';
 
 import { ElectronService } from './providers/electron.service';
 import { PocketDriveService } from './providers/pd.service';
-
-// Imports for loading & configuring the in-memory web api
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService }  from './in-memory-data.service';
+import { UserService } from './providers/user.service';
 
 @NgModule({
   declarations: [
@@ -29,12 +26,12 @@ import { InMemoryDataService }  from './in-memory-data.service';
     BrowserModule,
     FormsModule,
     HttpModule,
-    InMemoryWebApiModule.forRoot(InMemoryDataService),
     AppRoutingModule
   ],
   providers: [
     ElectronService, 
-    PocketDriveService
+    PocketDriveService,
+    UserService
   ],
   bootstrap: [AppComponent]
 })

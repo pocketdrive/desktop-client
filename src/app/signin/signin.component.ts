@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 
 import { PocketDrive } from "../models/pocketdrive";
 import { PocketDriveService } from "../providers/pd.service";
+import { UserService } from "../providers/user.service";
 
 @Component({
   selector: 'app-signin',
@@ -14,10 +15,13 @@ import { PocketDriveService } from "../providers/pd.service";
 export class SigninComponent implements OnInit {
 
   selectedPD: PocketDrive;
+  username: string;
+  password: string;
 
   constructor(
     private route: ActivatedRoute,
     private pocketDriveService: PocketDriveService,
+    private userService: UserService,
     private location: Location
     ) {}
 
@@ -31,7 +35,8 @@ export class SigninComponent implements OnInit {
   }  
 
   signIn(): void {
-    
+    console.log({username: this.username, password: this.password});
+    this.userService.signIn({username: this.username, password: this.password});
   } 
   
 }
