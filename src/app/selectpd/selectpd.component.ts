@@ -11,7 +11,7 @@ import { PocketDriveService } from "../providers/pd.service";
 
 export class SelectpdComponent implements OnInit {
 
-  constructor(private pocketDriveService: PocketDriveService) { }
+  constructor(private pocketDriveService: PocketDriveService) {}
 
   ngOnInit() {}
 

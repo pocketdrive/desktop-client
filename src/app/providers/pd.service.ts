@@ -3,7 +3,7 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import * as _ from 'lodash';
+// import * as _ from 'lodash';
 // import { Client } from 'node-ssdp';
 
 import { PocketDrive } from "../models/pocketdrive";
@@ -42,37 +42,36 @@ export class PocketDriveService {
     }
   }
 
-  /*private listenForPDs(){
-    var _ = require('lodash');
-    var Client = require('node-ssdp').Client, client = new Client();
-    var responses = {};
+  // listenForPDs(){
+  //   var Client = require('node-ssdp').Client, client = new Client();
+  //   var responses = {};
     
-    client.search('urn:schemas-upnp-org:device:PocketDrive');
-    client.on('response', function inResponse(headers, code, rinfo) {
-      var uuid =  _.split(headers.USN, ':', 2)[1];
+  //   client.search('urn:schemas-upnp-org:device:PocketDrive');
+    // client.on('response', function inResponse(headers, code, rinfo) {
+    //   var uuid =  _.split(headers.USN, ':', 2)[1];
 
-      if(!responses[uuid]){
-        var location = _.split(headers.LOCATION, '/', 4);
-        var host = _.split(location[2], ':', 2);
-        var name = _.reduce(_.split(location[3], '-'), (word1, word2) => {
-          return _.capitalize(word1) + ' ' + _.capitalize(word2);
-        });
+    //   if(!responses[uuid]){
+    //     var location = _.split(headers.LOCATION, '/', 4);
+    //     var host = _.split(location[2], ':', 2);
+    //     var name = _.reduce(_.split(location[3], '-'), (word1, word2) => {
+    //       return _.capitalize(_.toString(word1)) + ' ' + _.capitalize(_.toString(word2));
+    //     });
 
-        var response = {
-          uuid:uuid,
-          name: name,
-          ip: host[0],
-          port: host[1]
-        };
+    //     var response = {
+    //       uuid:uuid,
+    //       name: name,
+    //       ip: host[0],
+    //       port: host[1]
+    //     };
 
-        responses[uuid] = response;
-      }
-    });
+    //     responses[uuid] = response;
+    //   }
+    // });
 
-    setTimeout(function() {
-      client.stop();
-      // _.each(responses, (response) => console.log(response));
-    }, 1000);
-  }*/
+    // setTimeout(function() {
+    //   client.stop();
+    //   _.each(responses, (response) => console.log(response));
+    // }, 1000);
+  // }
 
 }

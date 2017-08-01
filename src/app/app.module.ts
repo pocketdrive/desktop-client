@@ -10,17 +10,20 @@ import { AppComponent } from './app.component';
 import { SigninComponent } from './signin/signin.component';
 import { SelectpdComponent } from './selectpd/selectpd.component';
 import { SplashComponent } from './splash/splash.component';
+import { HomeComponent } from './home/home.component';
 
 import { ElectronService } from './providers/electron.service';
 import { PocketDriveService } from './providers/pd.service';
 import { UserService } from './providers/user.service';
+import { UtilsService } from './providers/utils.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     SigninComponent,
     SelectpdComponent,
-    SplashComponent
+    SplashComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,8 @@ import { UserService } from './providers/user.service';
   providers: [
     ElectronService, 
     PocketDriveService,
-    UserService
+    UserService,
+    UtilsService
   ],
   bootstrap: [AppComponent]
 })

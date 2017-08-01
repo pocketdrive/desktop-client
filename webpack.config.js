@@ -192,7 +192,10 @@ module.exports = {
         "string_decoder": "require('string_decoder')",
         "url": "require('url')",
         "util": "require('util')",
-        "zlib": "require('zlib')"
+        "zlib": "require('zlib')",
+        "dgram": "require('dgram')",
+        "chai": "require('chai')",
+        "sinon": "require('sinon')"
     },
     "resolve": {
         "extensions": [

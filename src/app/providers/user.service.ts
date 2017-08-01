@@ -9,20 +9,19 @@ import { User } from "../models/user";
 @Injectable()
 export class UserService {
 
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new Headers({ 'Content-Type': 'application/json' });
   private url = BASE_URL + 'signin';
 
   user: User;
 
   constructor(private http: Http) { }
 
-  signIn(para: any): Promise<User> {
-    console.log(para);
-    return this.http
-      .post(this.url, JSON.stringify(para), {headers: this.headers})  
-      .toPromise()
-      .then(res => res.json().data as User)
-      .catch(this.handleError);
+  async signIn(para: any): Promise<User> {
+    let data = await this.http
+      .post(this.url, JSON.stringify(para), { headers: this.headers })
+      .toPromise();
+    this.user = data.json().data;
+    return this.user;
   }
 
   private handleError(error: any): Promise<any> {
