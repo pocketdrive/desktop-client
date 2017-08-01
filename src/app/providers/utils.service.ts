@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { storage } from 'electron-json-storage';
+import storage from 'electron-json-storage';
 
 @Injectable()
 export class UtilsService {

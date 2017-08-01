@@ -38,11 +38,11 @@ export class SigninComponent implements OnInit {
   }  
 
   signIn(): void {
-    this.userService.signIn({username: this.username, password: this.password})
-        .then((user)  => { 
-            this.utilsService.saveToLocalStorage('user', JSON.stringify(user));
-            // this.router.navigate(['home']);
-        });
+    // this.userService.signIn({username: this.username, password: this.password})
+    //     .then((user)  => { 
+    //         this.utilsService.saveToLocalStorage('user', JSON.stringify(user));
+    //         this.router.navigate(['home']);
+    //     });
     
     this.router.navigate(['home']);
   } 

@@ -16,6 +16,8 @@ import { ElectronService } from './providers/electron.service';
 import { PocketDriveService } from './providers/pd.service';
 import { UserService } from './providers/user.service';
 import { UtilsService } from './providers/utils.service';
+import { ExplorerComponent } from './explorer/explorer.component';
+import { SyncComponent } from './sync/sync.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { UtilsService } from './providers/utils.service';
     SigninComponent,
     SelectpdComponent,
     SplashComponent,
-    HomeComponent
+    HomeComponent,
+    ExplorerComponent,
+    SyncComponent
   ],
   imports: [
     BrowserModule,
