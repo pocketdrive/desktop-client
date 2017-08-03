@@ -17,7 +17,8 @@ import { PocketDriveService } from './providers/pd.service';
 import { UserService } from './providers/user.service';
 import { UtilsService } from './providers/utils.service';
 import { ExplorerComponent } from './explorer/explorer.component';
-import { SyncComponent } from './sync/sync.component';
+import { SyncClientPdComponent } from './sync-cp/sync-cp.component';
+import { SyncPdPdComponent } from './sync-pp/sync-pp.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { SyncComponent } from './sync/sync.component';
     SplashComponent,
     HomeComponent,
     ExplorerComponent,
-    SyncComponent
+    SyncClientPdComponent,
+    SyncPdPdComponent
   ],
   imports: [
     BrowserModule,

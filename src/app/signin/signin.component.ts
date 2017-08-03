@@ -33,6 +33,7 @@ export class SigninComponent implements OnInit {
       .subscribe((params: ParamMap) => this.selectedPD = this.pocketDriveService.getPD(params.get('type'), params.get('uuid')))         
   } 
 
+
   goBack(): void {
     this.location.back();
   }  

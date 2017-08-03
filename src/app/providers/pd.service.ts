@@ -3,7 +3,7 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-// import * as _ from 'lodash';
+// import * as _ from 'lodash'
 // import { Client } from 'node-ssdp';
 
 import { PocketDrive } from "../models/pocketdrive";

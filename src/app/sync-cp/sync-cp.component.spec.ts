@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SyncComponent } from './sync.component';
+import { SyncCpComponent } from './sync-cp.component';
 
-describe('SyncComponent', () => {
-  let component: SyncComponent;
-  let fixture: ComponentFixture<SyncComponent>;
+describe('SyncCpComponent', () => {
+  let component: SyncCpComponent;
+  let fixture: ComponentFixture<SyncCpComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SyncComponent ]
+      declarations: [ SyncCpComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SyncComponent);
+    fixture = TestBed.createComponent(SyncCpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

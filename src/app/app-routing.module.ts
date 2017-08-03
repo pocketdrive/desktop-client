@@ -3,7 +3,8 @@ import { SplashComponent } from './splash/splash.component';
 import { SelectpdComponent } from './selectpd/selectpd.component';
 import { HomeComponent } from './home/home.component';
 import { ExplorerComponent } from './explorer/explorer.component';
-import { SyncComponent } from './sync/sync.component';
+import { SyncClientPdComponent } from './sync-cp/sync-cp.component';
+import { SyncPdPdComponent } from './sync-pp/sync-pp.component';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -15,7 +16,8 @@ const routes: Routes = [
   {
     path: 'home', component: HomeComponent, children: [
       { path: 'explorer', component: ExplorerComponent },
-      { path: 'sync', component: SyncComponent }
+      { path: 'sync-cp', component: SyncClientPdComponent },
+      { path: 'sync-pp', component: SyncPdPdComponent }
     ]
   }
 ];
