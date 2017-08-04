@@ -15,7 +15,7 @@ import { HomeComponent } from './home/home.component';
 import { ElectronService } from './providers/electron.service';
 import { PocketDriveService } from './providers/pd.service';
 import { UserService } from './providers/user.service';
-import { UtilsService } from './providers/utils.service';
+import { LocalStorageService } from './providers/localstorage.service';
 import { ExplorerComponent } from './explorer/explorer.component';
 import { SyncClientPdComponent } from './sync-cp/sync-cp.component';
 import { SyncPdPdComponent } from './sync-pp/sync-pp.component';
@@ -38,10 +38,10 @@ import { SyncPdPdComponent } from './sync-pp/sync-pp.component';
     AppRoutingModule
   ],
   providers: [
-    ElectronService, 
+    ElectronService,
     PocketDriveService,
     UserService,
-    UtilsService
+    LocalStorageService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,12 +1,12 @@
 import 'rxjs/add/operator/switchMap';
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Location } from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {Router, ActivatedRoute, ParamMap} from '@angular/router';
+import {Location} from '@angular/common';
 
-import { PocketDrive } from "../models/pocketdrive";
-import { PocketDriveService } from "../providers/pd.service";
-import { UserService } from "../providers/user.service";
-import { UtilsService } from "../providers/utils.service";
+import {PocketDrive} from "../models/pocketdrive";
+import {PocketDriveService} from "../providers/pd.service";
+import {UserService} from "../providers/user.service";
+import {LocalStorageService} from "../providers/localstorage.service";
 
 @Component({
   selector: 'app-signin',
@@ -19,33 +19,44 @@ export class SigninComponent implements OnInit {
   username: string;
   password: string;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private pocketDriveService: PocketDriveService,
-    private utilsService: UtilsService,
-    private userService: UserService,
-    private location: Location
-    ) {}
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private pocketDriveService: PocketDriveService,
+              private localStorageService: LocalStorageService,
+              private userService: UserService,
+              private location: Location) {
+  }
 
   ngOnInit(): void {
     this.route.paramMap
-      .subscribe((params: ParamMap) => this.selectedPD = this.pocketDriveService.getPD(params.get('type'), params.get('uuid')))         
-  } 
-
+      .subscribe((params: ParamMap) => this.selectedPD = this.pocketDriveService.getPD(params.get('type'), params.get('uuid')))
+  }
 
   goBack(): void {
     this.location.back();
-  }  
+  }
 
   signIn(): void {
-    // this.userService.signIn({username: this.username, password: this.password})
-    //     .then((user)  => { 
-    //         this.utilsService.saveToLocalStorage('user', JSON.stringify(user));
-    //         this.router.navigate(['home']);
-    //     });
-    
-    this.router.navigate(['home']);
-  } 
-  
+    if (this.username == null || this.username.length == 0 || this.password == null || this.password.length == 0) {
+      alert('Username or password cannot be empty');
+    } else {
+      this.userService.signIn(this.username, this.password)
+        .then((data) => {
+          if (data.success) {
+            data = data.data;
+            this.localStorageService.addItem('user', JSON.stringify(data.user));
+            this.localStorageService.addItem('token', JSON.stringify(data.user.token));
+            this.localStorageService.addItem('mount', JSON.stringify(data.mount));
+
+            this.router.navigate(['home']);
+          } else {
+            alert('Invalid username or password');
+          }
+        });
+    }
+
+    // Uncomment following line to buy pass login for testing
+    // this.router.navigate(['home']);
+  }
+
 }
