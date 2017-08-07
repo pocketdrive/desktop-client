@@ -30,6 +30,10 @@ export class HttpInterceptor extends Http {
       })
   }
 
+  post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
+    return super.post(this.getFullUrl(url), body, this.requestOptions(options));
+  }
+
   // Implement POST, PUT, DELETE HERE
 
   /**

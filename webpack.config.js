@@ -195,7 +195,8 @@ module.exports = {
         "zlib": "require('zlib')",
         "dgram": "require('dgram')",
         "chai": "require('chai')",
-        "sinon": "require('sinon')"
+        "sinon": "require('sinon')",
+        "node-ssdp-lite": "require('node-ssdp-lite')"
     },
     "resolve": {
         "extensions": [

@@ -1,21 +1,18 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {PocketDriveService} from "../providers/pd.service";
 
 @Component({
   selector: 'app-splash',
   templateUrl: './splash.component.html',
   styleUrls: ['./splash.component.scss']
 })
-
 export class SplashComponent implements OnInit {
 
-  constructor(private router: Router) {
+  constructor(private pocketDriveService: PocketDriveService) {
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.router.navigate(['selectpd']);
-    }, 2000);
+    this.pocketDriveService.listenForPDs();
   }
 
 }

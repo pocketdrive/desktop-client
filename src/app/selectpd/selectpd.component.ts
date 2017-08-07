@@ -13,14 +13,16 @@ export class SelectpdComponent implements OnInit {
 
   constructor(private pocketDriveService: PocketDriveService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
 
-  get localPds():PocketDrive[] { 
-    return this.pocketDriveService.localPDs; 
-  } 
+  }
 
-  get remotePds():PocketDrive[] { 
-    return this.pocketDriveService.remotePDs; 
-  } 
+  get localPds():PocketDrive[] {
+    return this.pocketDriveService.localPDs;
+  }
+
+  get remotePds():PocketDrive[] {
+    return this.pocketDriveService.remotePDs;
+  }
 
 }

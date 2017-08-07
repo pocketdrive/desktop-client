@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {BASE_URL} from "../const";
 import {Folder} from "../models/folder";
-import {Http} from "@angular/http";
 import {getSyncFolders, MessageHandler} from "./messages";
+import {HttpInterceptor} from "./http-interceptor.service";
 
 @Injectable()
 export class SyncService {
@@ -11,7 +11,7 @@ export class SyncService {
 
   syncFolders: Folder[];
 
-  constructor(private http: Http) {
+  constructor(private http: HttpInterceptor) {
   }
 
   async getSyncFolderList(): Promise<Folder[]> {
@@ -20,6 +20,7 @@ export class SyncService {
     let data = await this.http
       .post(this.url, JSON.stringify(message), MessageHandler.getJsonHeaders())
       .toPromise();
+
     this.syncFolders = data.json().data;
     return this.syncFolders;
   }
