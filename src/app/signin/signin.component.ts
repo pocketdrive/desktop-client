@@ -43,10 +43,10 @@ export class SigninComponent implements OnInit {
       this.userService.signIn(this.username, this.password)
         .then((data) => {
           if (data.success) {
-            data = data.data;
-            this.localStorageService.addItem('user', JSON.stringify(data.user));
-            this.localStorageService.addItem('token', JSON.stringify(data.user.token));
-            this.localStorageService.addItem('mount', JSON.stringify(data.mount));
+            console.log(data.token);
+            this.localStorageService.addItem('token', JSON.stringify(data.token));
+            this.localStorageService.addItem('user', JSON.stringify(data.data.user));
+            this.localStorageService.addItem('mount', JSON.stringify(data.data.mount));
 
             this.router.navigate(['home']);
           } else {
@@ -54,9 +54,6 @@ export class SigninComponent implements OnInit {
           }
         });
     }
-
-    // Uncomment following line to buy pass login for testing
-    // this.router.navigate(['home']);
   }
 
 }
