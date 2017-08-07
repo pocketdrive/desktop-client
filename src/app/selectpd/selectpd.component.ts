@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
 
-import { PocketDrive } from "../models/pocketdrive";
-import { PocketDriveService } from "../providers/pd.service";
+import {PocketDrive} from "../models/pocketdrive";
+import {PocketDriveService} from "../providers/pd.service";
 
 @Component({
   selector: 'app-selectpd',
@@ -11,18 +12,25 @@ import { PocketDriveService } from "../providers/pd.service";
 
 export class SelectpdComponent implements OnInit {
 
-  constructor(private pocketDriveService: PocketDriveService) {}
+  constructor(private location: Location,
+              private pocketDriveService: PocketDriveService) {
+  }
 
   ngOnInit() {
 
   }
 
-  get localPds():PocketDrive[] {
+  get localPds(): PocketDrive[] {
     return this.pocketDriveService.localPDs;
   }
 
-  get remotePds():PocketDrive[] {
+  get remotePds(): PocketDrive[] {
     return this.pocketDriveService.remotePDs;
   }
+
+  refresh(): void {
+    this.location.back();
+  }
+
 
 }

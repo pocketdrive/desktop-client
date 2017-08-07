@@ -11,6 +11,11 @@
                     <p>{{pd.ip}}</p>
                 </div>
             </div>
+          <div id="refreshLocalPDs" class="col-md-2 col-sm-3 panel pd-item">
+            <div class="panel-body">
+              <img class="centered" (click)="refresh()" src="../../assets/refresh.png" alt="Refresh" height="42" width="42">
+            </div>
+          </div>
         </div>
     </div>
     <div *ngIf="remotePds">
@@ -24,9 +29,9 @@
                     <p>{{pd.ip}}</p>
                 </div>
             </div>
-            <div id="newRemotePD" class="col-md-2 col-sm-3 panel panel-default pd-item">
+            <div id="newRemotePD" class="col-md-2 col-sm-3 panel pd-item">
                 <div class="panel-body">
-                    <img class="centered" src="../../assets/add_new.png" alt="PD Image" height="42" width="42">
+                    <img class="centered" src="../../assets/add_new.png" alt="Add new" height="42" width="42">
                 </div>
             </div>
         </div>
