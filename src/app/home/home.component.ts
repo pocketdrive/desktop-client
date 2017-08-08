@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import {HttpInterceptor} from "../providers/http-interceptor.service";
 
 @Component({
   selector: 'app-home',
