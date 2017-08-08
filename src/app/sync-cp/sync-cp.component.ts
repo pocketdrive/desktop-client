@@ -4,14 +4,7 @@ import {Folder} from '../models/folder';
 
 import * as _ from 'lodash'
 import {SyncService} from "../providers/sync.service";
-
-const FOLDERS = [
-  {name: 'DVios', size: '3.2 GB', sync: true},
-  {name: 'Backup data', size: '212 MB', sync: false},
-  {name: 'Documents', size: '1.1 GB', sync: true},
-  {name: 'CP', size: '2.1 GB', sync: false},
-  {name: 'Shared', size: '47 MB', sync: true},
-]
+import {HttpInterceptor} from "../providers/http-interceptor.service";
 
 @Component({
   selector: 'app-sync-cp',
@@ -24,8 +17,8 @@ export class SyncClientPdComponent implements OnInit {
   folders: Folder[];
   allSelected: boolean;
 
-  constructor(private syncService: SyncService) {
-    this.folders = FOLDERS;
+  constructor(private syncService: SyncService,
+              private http: HttpInterceptor) {
     this.allSelected = false;
   }
 

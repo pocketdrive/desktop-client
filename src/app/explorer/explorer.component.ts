@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {HttpInterceptor} from "../providers/http-interceptor.service";
 
 @Component({
   selector: 'app-explorer',
@@ -7,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExplorerComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

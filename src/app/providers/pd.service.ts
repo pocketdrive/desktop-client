@@ -25,7 +25,7 @@ export class PocketDriveService {
   localPDs: PocketDrive[] = [];
   remotePDs: PocketDrive[] = [];
 
-  constructor(private router: Router, private http: Http) {
+  constructor(private router: Router) {
   }
 
   getPD(type: string, uuid: string): PocketDrive {
@@ -66,9 +66,9 @@ export class PocketDriveService {
     client.search('urn:schemas-upnp-org:device:PocketDrive');
 
     setTimeout(() => {
+      client.stop();
       // console.log(self.localPDs);
       this.router.navigate(['selectpd']);
-      client.stop();
     }, 2000);
   }
 

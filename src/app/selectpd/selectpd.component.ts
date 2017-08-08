@@ -17,7 +17,6 @@ export class SelectpdComponent implements OnInit {
   }
 
   ngOnInit() {
-
   }
 
   get localPds(): PocketDrive[] {

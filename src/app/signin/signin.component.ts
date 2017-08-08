@@ -7,6 +7,9 @@ import {PocketDrive} from "../models/pocketdrive";
 import {PocketDriveService} from "../providers/pd.service";
 import {UserService} from "../providers/user.service";
 import {LocalStorageService} from "../providers/localstorage.service";
+import {MessageHandler} from "../providers/messages";
+import {RequesthandlerService} from "../providers/requesthandler.service";
+import {HttpInterceptor} from "../providers/http-interceptor.service";
 
 @Component({
   selector: 'app-signin',
@@ -21,10 +24,11 @@ export class SigninComponent implements OnInit {
 
   constructor(private router: Router,
               private route: ActivatedRoute,
+              private location: Location,
               private pocketDriveService: PocketDriveService,
               private localStorageService: LocalStorageService,
               private userService: UserService,
-              private location: Location) {
+              private httpInterceptor: HttpInterceptor) {
   }
 
   ngOnInit(): void {
@@ -43,14 +47,16 @@ export class SigninComponent implements OnInit {
       this.userService.signIn(this.username, this.password)
         .then((data) => {
           if (data.success) {
-            console.log(data.token);
             this.localStorageService.addItem('token', JSON.stringify(data.token));
             this.localStorageService.addItem('user', JSON.stringify(data.data.user));
             this.localStorageService.addItem('mount', JSON.stringify(data.data.mount));
 
+            this.httpInterceptor.token = data.token;
+
             this.router.navigate(['home']);
           } else {
             alert('Invalid username or password');
+            console.error(data.error);
           }
         });
     }

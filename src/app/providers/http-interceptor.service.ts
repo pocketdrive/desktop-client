@@ -3,14 +3,14 @@ import {Http, ConnectionBackend, RequestOptions, RequestOptionsArgs, Response, H
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {environment} from 'environments';
-import {LocalStorageService} from "./localstorage.service";
 
 @Injectable()
 export class HttpInterceptor extends Http {
 
+  token: string;
+
   constructor(private backend: ConnectionBackend,
-              private defaultOptions: RequestOptions,
-              private localStorageService: LocalStorageService) {
+              private defaultOptions: RequestOptions) {
     super(backend, defaultOptions);
   }
 
@@ -34,8 +34,6 @@ export class HttpInterceptor extends Http {
     return super.post(this.getFullUrl(url), body, this.requestOptions(options));
   }
 
-  // Implement POST, PUT, DELETE HERE
-
   /**
    * Request options.
    * @param options
@@ -47,7 +45,8 @@ export class HttpInterceptor extends Http {
     }
     if (options.headers == null) {
       options.headers = new Headers({
-        'Authorization': `Bearer ` + this.localStorageService.getItem('token')
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ` + this.token
       });
     }
     return options;

@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Headers, Http} from '@angular/http';
+import {Http} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
 import {BASE_URL} from "../const";
-import {User} from "../models/user";
-import {MessageHandler, signIn} from "./messages";
+import {RequesthandlerService} from "./requesthandler.service";
 
 @Injectable()
 export class UserService {
@@ -16,14 +15,14 @@ export class UserService {
   }
 
   signIn(username: string, password: string): Promise<any> {
-    let message = MessageHandler.getMessage(signIn);
-    message.data = {
+    let message = {type: 'signIn'};
+    message['data'] = {
       username: username,
       password: password
     };
 
     return this.http
-      .post(this.url, message, MessageHandler.getJsonHeaders())
+      .post(this.url, message, new Headers({'Content-Type': 'application/json'}))
       .toPromise()
       .then(response => response.json())
       .catch(this.handleError);
