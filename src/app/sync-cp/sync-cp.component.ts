@@ -4,7 +4,7 @@ import {Folder} from '../models/folder';
 
 import * as _ from 'lodash'
 import {SyncService} from "../providers/sync.service";
-import {HttpInterceptor} from "../providers/http-interceptor.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-sync-cp',
@@ -18,7 +18,8 @@ export class SyncClientPdComponent implements OnInit {
   allSelected: boolean;
 
   constructor(private syncService: SyncService,
-              private http: HttpInterceptor) {
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
     this.allSelected = false;
   }
 
@@ -33,6 +34,19 @@ export class SyncClientPdComponent implements OnInit {
     _.each(this.folders, (folder) => {
       folder.sync = !this.allSelected;
     })
+  }
+
+  // Called when any check box except select all is clicked.
+  checkBoxClicked(): void {
+    this.allSelected = false;
+  }
+
+  cancel(): void {
+    this.router.navigate(['explorer'], {relativeTo: this.activatedRoute.parent});
+  }
+
+  ok(): void {
+    this.syncService.setSyncFolderList(this.folders);
   }
 
 }
