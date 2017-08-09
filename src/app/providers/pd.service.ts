@@ -68,7 +68,7 @@ export class PocketDriveService {
       client.stop();
       // console.log(self.localPDs);
       this.router.navigate(['selectpd']);
-    }, 2000);
+    }, 3000);
   }
 
 }
