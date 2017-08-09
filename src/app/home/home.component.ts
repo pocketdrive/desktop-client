@@ -19,7 +19,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.localStorageService.getItem('user'));
     this.user = this.localStorageService.getItem('user');
     this.router.navigate(['explorer'], {relativeTo: this.activatedRoute});
   }

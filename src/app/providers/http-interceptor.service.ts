@@ -50,8 +50,6 @@ export class HttpInterceptor extends Http {
         this.token = this.localStorageService.getItem('token');
       }
 
-      console.log(this.token);
-
       options.headers = new Headers({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ` + this.token
