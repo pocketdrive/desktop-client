@@ -4,7 +4,6 @@ import {Http} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import {BASE_URL} from "../const";
-import {RequesthandlerService} from "./requesthandler.service";
 
 @Injectable()
 export class UserService {

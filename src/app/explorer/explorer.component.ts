@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpInterceptor} from "../providers/http-interceptor.service";
 
 @Component({
   selector: 'app-explorer',

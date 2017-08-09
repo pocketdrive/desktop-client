@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import storage from 'electron-json-storage';
+import storage from 'electron-json-storage-sync';
 
 @Injectable()
 export class LocalStorageService {
@@ -7,24 +7,24 @@ export class LocalStorageService {
   constructor() {
   }
 
-  addItem(key: string, value: string): void {
-    storage.set(key, value, (error) => {
-      if (error) {
-        console.log("Error occurred while saving " + key + " to local storage", error);
-      }
-    });
+  setItem(key: string, value: string): void {
+    const result = storage.set(key, value);
+
+    if (!result.status) {
+      console.log("Error occurred while saving " + key + " to local storage", result.error);
+    } else {
+      console.log(key + ' saved to local storage');
+    }
   }
 
-  getItem(key: string): Promise<any> {
-    return new Promise((resolve) => {
-      storage.get(key, (error, data) => {
-        if (error) {
-          console.log("Error occurred while saving " + key + " to local storage", error);
-          resolve(error);
-        }
-        resolve(data);
-      });
-    });
+  getItem(key: string): any {
+    const result = storage.get(key);
+
+    if (!result.status) {
+      console.log("Error occurred while reading " + key + " from local storage", result.error);
+    }
+
+    return result;
   }
 
 

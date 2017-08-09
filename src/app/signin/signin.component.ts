@@ -7,8 +7,6 @@ import {PocketDrive} from "../models/pocketdrive";
 import {PocketDriveService} from "../providers/pd.service";
 import {UserService} from "../providers/user.service";
 import {LocalStorageService} from "../providers/localstorage.service";
-import {MessageHandler} from "../providers/messages";
-import {RequesthandlerService} from "../providers/requesthandler.service";
 import {HttpInterceptor} from "../providers/http-interceptor.service";
 
 @Component({
@@ -47,9 +45,9 @@ export class SigninComponent implements OnInit {
       this.userService.signIn(this.username, this.password)
         .then((data) => {
           if (data.success) {
-            this.localStorageService.addItem('token', JSON.stringify(data.token));
-            this.localStorageService.addItem('user', JSON.stringify(data.data.user));
-            this.localStorageService.addItem('mount', JSON.stringify(data.data.mount));
+            this.localStorageService.setItem('token', data.token);
+            this.localStorageService.setItem('user', data.data.user);
+            this.localStorageService.setItem('mount', data.data.mount);
 
             this.httpInterceptor.token = data.token;
 

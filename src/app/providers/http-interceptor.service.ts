@@ -3,6 +3,7 @@ import {Http, ConnectionBackend, RequestOptions, RequestOptionsArgs, Response, H
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {environment} from 'environments';
+import {LocalStorageService} from "./localstorage.service";
 
 @Injectable()
 export class HttpInterceptor extends Http {
@@ -10,7 +11,8 @@ export class HttpInterceptor extends Http {
   token: string;
 
   constructor(private backend: ConnectionBackend,
-              private defaultOptions: RequestOptions) {
+              private defaultOptions: RequestOptions,
+              private localStorageService: LocalStorageService) {
     super(backend, defaultOptions);
   }
 
@@ -44,6 +46,16 @@ export class HttpInterceptor extends Http {
       options = new RequestOptions();
     }
     if (options.headers == null) {
+      if (!this.token) {
+        const result = this.localStorageService.getItem('token');
+
+        if (result.status) {
+          this.token = result.data;
+        }
+      }
+
+      console.log(this.token);
+
       options.headers = new Headers({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ` + this.token
