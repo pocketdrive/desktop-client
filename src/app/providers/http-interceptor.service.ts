@@ -47,11 +47,7 @@ export class HttpInterceptor extends Http {
     }
     if (options.headers == null) {
       if (!this.token) {
-        const result = this.localStorageService.getItem('token');
-
-        if (result.status) {
-          this.token = result.data;
-        }
+        this.token = this.localStorageService.getItem('token');
       }
 
       console.log(this.token);

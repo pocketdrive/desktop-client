@@ -22,9 +22,9 @@ export class LocalStorageService {
 
     if (!result.status) {
       console.log("Error occurred while reading " + key + " from local storage", result.error);
+    } else {
+      return result.data;
     }
-
-    return result;
   }
 
 

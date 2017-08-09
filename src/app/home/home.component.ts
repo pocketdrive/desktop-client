@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
+import {User} from "../models/user";
+import {LocalStorageService} from "../providers/localstorage.service";
 
 @Component({
   selector: 'app-home',
@@ -8,12 +10,17 @@ import {Router, ActivatedRoute} from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
+  user: User;
+
   constructor(private router: Router,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private localStorageService: LocalStorageService) {
     HomeComponent.loadAdminLTEScripts();
   }
 
   ngOnInit() {
+    console.log(this.localStorageService.getItem('user'));
+    this.user = this.localStorageService.getItem('user');
     this.router.navigate(['explorer'], {relativeTo: this.activatedRoute});
   }
 
