@@ -53,9 +53,9 @@ export class HttpInterceptor extends Http {
       options = new RequestOptions();
     }
     if (options.headers == null) {
-      /*if (!this.token) {
+      if (!this.token) {
        this.token = this.localStorageService.getItem('token');
-       }*/
+       }
 
       options.headers = new Headers({
         'Content-Type': 'application/json',
