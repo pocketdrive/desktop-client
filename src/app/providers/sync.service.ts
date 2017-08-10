@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Folder} from "../models/folder";
 import {HttpInterceptor} from "./http-interceptor.service";
+import {Router} from "@angular/router";
 
 const _ = require('lodash');
 
@@ -9,7 +10,8 @@ export class SyncService {
 
   private url = 'sync/';
 
-  constructor(private http: HttpInterceptor) {
+  constructor(private http: HttpInterceptor,
+              private router: Router) {
   }
 
   getSyncFolderList(): Promise<Folder[]> {
@@ -19,7 +21,7 @@ export class SyncService {
       .post(this.url + 'list', JSON.stringify(message))
       .toPromise()
       .then((response) => response.json() as Folder[])
-      .catch(SyncService.handleError);
+      .catch(this.handleError);
   }
 
   setSyncFolderList(foldersList: Folder[]): void {
@@ -42,12 +44,12 @@ export class SyncService {
       .post(this.url + 'set', JSON.stringify(message))
       .toPromise()
       .then((response) => response.json())
-      .catch(SyncService.handleError);
+      .catch(this.handleError);
   }
 
-  static handleError(error: any): Promise<any> {
-    console.log('handler error');
-    return Promise.reject(error.message || error);
+  private handleError(error: any): void {
+    // console.error('An error occurred', error);
+    // return Promise.reject(error.message || error);
   }
 
 }

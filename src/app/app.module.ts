@@ -21,6 +21,7 @@ import {SyncClientPdComponent} from './sync-cp/sync-cp.component';
 import {SyncPdPdComponent} from './sync-pp/sync-pp.component';
 import {SyncService} from "./providers/sync.service";
 import {HttpInterceptor} from "./providers/http-interceptor.service";
+import {Router} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -47,10 +48,10 @@ import {HttpInterceptor} from "./providers/http-interceptor.service";
     SyncService,
     {
       provide: HttpInterceptor,
-      useFactory: (backend: XHRBackend, defaultOptions: RequestOptions, localStorageService: LocalStorageService) => {
-        return new HttpInterceptor(backend, defaultOptions, localStorageService);
+      useFactory: (backend: XHRBackend, defaultOptions: RequestOptions, localStorageService: LocalStorageService, router: Router,) => {
+        return new HttpInterceptor(backend, defaultOptions, localStorageService, router);
       },
-      deps: [XHRBackend, RequestOptions, LocalStorageService]
+      deps: [XHRBackend, RequestOptions, LocalStorageService, Router]
     }
   ],
   bootstrap: [AppComponent]

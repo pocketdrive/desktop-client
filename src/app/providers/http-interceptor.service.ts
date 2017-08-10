@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {environment} from 'environments';
 import {LocalStorageService} from "./localstorage.service";
+import {Router} from "@angular/router";
 
 @Injectable()
 export class HttpInterceptor extends Http {
@@ -12,7 +13,8 @@ export class HttpInterceptor extends Http {
 
   constructor(private backend: ConnectionBackend,
               private defaultOptions: RequestOptions,
-              private localStorageService: LocalStorageService) {
+              private localStorageService: LocalStorageService,
+              private router: Router) {
     super(backend, defaultOptions);
   }
 
@@ -33,7 +35,12 @@ export class HttpInterceptor extends Http {
   }
 
   post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
-    return super.post(this.getFullUrl(url), body, this.requestOptions(options));
+    return super.post(this.getFullUrl(url), body, this.requestOptions(options))
+      .do((res: Response) => {
+        this.onSuccess(res);
+      }, (error: any) => {
+        this.onError(error);
+      });
   }
 
   /**
@@ -46,9 +53,9 @@ export class HttpInterceptor extends Http {
       options = new RequestOptions();
     }
     if (options.headers == null) {
-      if (!this.token) {
-        this.token = this.localStorageService.getItem('token');
-      }
+      /*if (!this.token) {
+       this.token = this.localStorageService.getItem('token');
+       }*/
 
       options.headers = new Headers({
         'Content-Type': 'application/json',
@@ -82,7 +89,7 @@ export class HttpInterceptor extends Http {
    * @param res
    */
   private onSuccess(res: Response): void {
-    console.log(res);
+    // console.log(res);
   }
 
   /**
@@ -90,7 +97,12 @@ export class HttpInterceptor extends Http {
    * @param error
    */
   private onError(error: any): void {
-    console.log(error);
+    console.error('onError' ,error);
+
+    if (error.status == 401) {
+      this.router.navigate(['']);
+    }
+
   }
 
 }
