@@ -22,6 +22,7 @@ import {SyncPdPdComponent} from './sync-pp/sync-pp.component';
 import {SyncService} from "./providers/sync.service";
 import {HttpInterceptor} from "./providers/http-interceptor.service";
 import {Router} from "@angular/router";
+import { MountComponent } from './mount/mount.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {Router} from "@angular/router";
     HomeComponent,
     ExplorerComponent,
     SyncClientPdComponent,
-    SyncPdPdComponent
+    SyncPdPdComponent,
+    MountComponent
   ],
   imports: [
     BrowserModule,

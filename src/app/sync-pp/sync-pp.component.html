@@ -13,16 +13,15 @@
 
 <!-- Main content -->
 <section class="content">
-  <div class="row">
+  <div class="row" *ngFor="let link of links">
     <div class="col-xs-12">
       <div class="panel panel-default">
-        <div class="panel-body">
+        <div class="panel-body" (click)="openSyncSettings(link)">
           <div class="col-md-2 col-sm-4 panel panel-default pd-item">
             <div class="panel-body">
               <img class="center-block" src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
               <br>
-              <p>Name</p>
-              <p>IP</p>
+              <p>{{link[0].name}}</p>
             </div>
           </div>
           <style>
@@ -36,16 +35,32 @@
           </style>
           <div class="col-md-2 col-sm-3 pd-item">
             <div class="middleArrow">
-              <img style="display: block;width: 100%;height: 100%;margin: 0 auto;" class="center-block" src="../../assets/arrow.png" alt="PD Image">
+              <img style="display: block;width: 100%;height: 100%;margin: 0 auto;" class="center-block"
+                   src="../../assets/arrow.png" alt="PD Image">
             </div>
           </div>
           <div class="col-md-2 col-sm-4 panel panel-default pd-item">
             <div class="panel-body">
               <img class="center-block" src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
               <br>
-              <p>Name</p>
-              <p>IP</p>
+              <p>{{link[1].name}}</p>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12" *ngIf="selectedLink && selectedLink[0].name === link[0].name">
+        <div class="panel panel-default">
+          <div class="panel-body" (click)="openSyncSettings(link)">
+            <form>
+              <div class="form-group">
+                <input type="checkbox" checked>
+                <label> Sync over laptop</label>
+              </div>
+              <div class="form-group">
+                <input type="checkbox">
+                <label> Sync over internet</label>
+              </div>
+            </form>
           </div>
         </div>
       </div>
