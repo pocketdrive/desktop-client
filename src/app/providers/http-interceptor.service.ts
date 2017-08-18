@@ -2,14 +2,16 @@ import {Injectable} from '@angular/core';
 import {Http, ConnectionBackend, RequestOptions, RequestOptionsArgs, Response, Headers, Request} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
-import {environment} from 'environments';
 import {LocalStorageService} from "./localstorage.service";
 import {Router} from "@angular/router";
+import {PocketDrive} from "../models/pocketdrive";
+import {Constants} from "../constants";
 
 @Injectable()
 export class HttpInterceptor extends Http {
 
   token: string;
+  baseUrl: string;
 
   constructor(private backend: ConnectionBackend,
               private defaultOptions: RequestOptions,
@@ -52,26 +54,15 @@ export class HttpInterceptor extends Http {
     if (options == null) {
       options = new RequestOptions();
     }
-    if (options.headers == null) {
-      if (!this.token) {
-       this.token = this.localStorageService.getItem('token');
-       }
 
+    if (options.headers == null) {
       options.headers = new Headers({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ` + this.token
+        'Authorization': `Bearer ` + this.getToken()
       });
     }
-    return options;
-  }
 
-  /**
-   * Build API url.
-   * @param url
-   * @returns {string}
-   */
-  private getFullUrl(url: string): string {
-    return environment.apiEndpoint + url;
+    return options;
   }
 
   /**
@@ -97,7 +88,7 @@ export class HttpInterceptor extends Http {
    * @param error
    */
   private onError(error: any): void {
-    console.error('onError' ,error);
+    console.error('onError', error);
 
     if (error.status == 401) {
       this.router.navigate(['']);
@@ -105,4 +96,20 @@ export class HttpInterceptor extends Http {
 
   }
 
+  private getToken(): string {
+    if (!this.token) {
+      this.token = this.localStorageService.getItem(Constants.localStorageKeys.authToken);
+    }
+
+    return this.token;
+  }
+
+  getFullUrl(url: string): string {
+    if (!this.baseUrl) {
+      let pd: PocketDrive = JSON.parse(this.localStorageService.getItem(Constants.localStorageKeys.selectedPd));
+      this.baseUrl = 'http://' + pd.ip + ':' + pd.port;
+    }
+
+    return this.baseUrl + '/' + url;
+  }
 }

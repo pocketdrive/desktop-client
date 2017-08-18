@@ -3,14 +3,15 @@ import {Http} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import {BASE_URL} from "../const";
+import {HttpInterceptor} from "./http-interceptor.service";
 
 @Injectable()
 export class UserService {
 
-  private url = BASE_URL + 'signin';
+  private url = 'user/signin';
 
-  constructor(private http: Http) {
+  constructor(private http: Http,
+              private httpInterceptor: HttpInterceptor) {
   }
 
   signIn(username: string, password: string): Promise<any> {
@@ -21,14 +22,13 @@ export class UserService {
     };
 
     return this.http
-      .post(this.url, message, new Headers({'Content-Type': 'application/json'}))
+      .post(this.httpInterceptor.getFullUrl(this.url), message, new Headers({'Content-Type': 'application/json'}))
       .toPromise()
       .then(response => response.json())
       .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {
-    console.log('handler error');
     return Promise.reject(error.message || error);
   }
 

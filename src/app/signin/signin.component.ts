@@ -1,13 +1,13 @@
 import 'rxjs/add/operator/switchMap';
 import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute, ParamMap} from '@angular/router';
+import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 
 import {PocketDrive} from "../models/pocketdrive";
-import {PocketDriveService} from "../providers/pd.service";
 import {UserService} from "../providers/user.service";
 import {LocalStorageService} from "../providers/localstorage.service";
 import {HttpInterceptor} from "../providers/http-interceptor.service";
+import {Constants} from "../constants";
 
 @Component({
   selector: 'app-signin',
@@ -21,17 +21,14 @@ export class SigninComponent implements OnInit {
   password: string;
 
   constructor(private router: Router,
-              private route: ActivatedRoute,
               private location: Location,
-              private pocketDriveService: PocketDriveService,
               private localStorageService: LocalStorageService,
               private userService: UserService,
               private httpInterceptor: HttpInterceptor) {
   }
 
   ngOnInit(): void {
-    this.route.paramMap
-      .subscribe((params: ParamMap) => this.selectedPD = this.pocketDriveService.getPD(params.get('type'), params.get('uuid')))
+    this.selectedPD = this.localStorageService.getItem(Constants.localStorageKeys.selectedPd);
   }
 
   goBack(): void {
@@ -45,13 +42,13 @@ export class SigninComponent implements OnInit {
       this.userService.signIn(this.username, this.password)
         .then((data) => {
           if (data.success) {
-            this.localStorageService.setItem('token', data.token);
-            this.localStorageService.setItem('user', data.data.user);
-            this.localStorageService.setItem('mount', data.data.mount);
+            this.localStorageService.setItem(Constants.localStorageKeys.authToken, data.token);
+            this.localStorageService.setItem(Constants.localStorageKeys.loggedInuser, data.data.user);
+            this.localStorageService.setItem(Constants.localStorageKeys.mountDetails, data.data.mount);
 
             this.httpInterceptor.token = data.token;
-
             this.router.navigate(['home']);
+
           } else {
             alert('Invalid username or password');
             console.error(data.error);

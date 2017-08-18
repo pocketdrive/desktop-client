@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from 'electron';
+import {app, BrowserWindow, screen} from 'electron';
 import * as path from 'path';
 
 let win, serve;
@@ -6,8 +6,7 @@ const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
 
 if (serve) {
-  require('electron-reload')(__dirname, {
-  });
+  require('electron-reload')(__dirname, {});
 }
 
 function createWindow() {
@@ -19,10 +18,10 @@ function createWindow() {
   win = new BrowserWindow({
     x: 0,
     y: 0,
-    // width: size.width,
-    // height: size.height
-    width: 800,
-    height: 600
+    width: size.width,
+    height: size.height
+    // width: 800,
+    // height: 600
   });
 
   // and load the index.html of the app.
@@ -30,7 +29,7 @@ function createWindow() {
 
   // Open the DevTools.
   if (serve) {
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.

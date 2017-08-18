@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.localStorageService.getItem('user');
-    this.router.navigate(['sync-cp'], {relativeTo: this.activatedRoute});
+    this.router.navigate(['explorer'], {relativeTo: this.activatedRoute});
   }
 
   static loadAdminLTEScripts() {

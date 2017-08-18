@@ -3,6 +3,9 @@ import {Location} from '@angular/common';
 
 import {PocketDrive} from "../models/pocketdrive";
 import {PocketDriveService} from "../providers/pd.service";
+import {LocalStorageService} from "../providers/localstorage.service";
+import {Router} from "@angular/router";
+import {Constants} from "../constants";
 
 @Component({
   selector: 'app-selectpd',
@@ -12,8 +15,10 @@ import {PocketDriveService} from "../providers/pd.service";
 
 export class SelectpdComponent implements OnInit {
 
-  constructor(private location: Location,
-              private pocketDriveService: PocketDriveService) {
+  constructor(private router: Router,
+              private location: Location,
+              private pocketDriveService: PocketDriveService,
+              private localStorageService: LocalStorageService) {
   }
 
   ngOnInit() {
@@ -31,5 +36,10 @@ export class SelectpdComponent implements OnInit {
     this.location.back();
   }
 
+  selectLocalPd(pd: PocketDrive): void {
+    this.localStorageService.setItem(Constants.localStorageKeys.selectedPd, JSON.stringify(pd));
+    this.localStorageService.setItem(Constants.localStorageKeys.networkType, Constants.networkTypes.local);
+    this.router.navigate(['signin']);
+  }
 
 }

@@ -1,39 +1,40 @@
 <div class="container">
-    <h1 class="center-horizontal">Select PD</h1>
-    <div *ngIf="localPds">
-        <div class="col-xs-12">
-            <p><strong>Local PDs</strong></p>
-            <div id="localPD" class="col-md-2 col-sm-3 panel panel-default pd-item" *ngFor="let pd of localPds" [routerLink]="['/signin', 'local', pd.uuid]">
-                <div class="panel-body">
-                    <img class="center-block" src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
-                    <br>
-                    <p>{{pd.name}}</p>
-                    <p>{{pd.ip}}</p>
-                </div>
-            </div>
-          <div id="refreshLocalPDs" class="col-md-2 col-sm-3 panel pd-item">
-            <div class="panel-body">
-              <img class="centered" (click)="refresh()" src="../../assets/refresh.png" alt="Refresh" height="42" width="42">
-            </div>
-          </div>
+  <h1 class="center-horizontal">Select PD</h1>
+  <div *ngIf="localPds">
+    <div class="col-xs-12">
+      <p><strong>Local PDs</strong></p>
+      <div id="localPD" class="col-md-2 col-sm-3 panel panel-default pd-item" *ngFor="let pd of localPds"
+           (click)="selectLocalPd(pd)">
+        <div class="panel-body">
+          <img class="center-block" src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
+          <br>
+          <p>{{pd.name}}</p>
+          <p>{{pd.ip}}</p>
         </div>
-    </div>
-    <div *ngIf="remotePds">
-        <div class="col-xs-12" style="margin-top: 20px;">
-            <p><strong>Remote PDs</strong></p>
-            <div id="remotePD" class="col-md-2 col-sm-3 panel panel-default pd-item" *ngFor="let pd of remotePds">
-                <div class="panel-body">
-                    <img class="center-block" src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
-                    <br>
-                    <p>{{pd.name}}</p>
-                    <p>{{pd.ip}}</p>
-                </div>
-            </div>
-            <div id="newRemotePD" class="col-md-2 col-sm-3 panel pd-item">
-                <div class="panel-body">
-                    <img class="centered" src="../../assets/add_new.png" alt="Add new" height="42" width="42">
-                </div>
-            </div>
+      </div>
+      <div id="refreshLocalPDs" class="col-md-2 col-sm-3 panel pd-item">
+        <div class="panel-body">
+          <img class="centered" (click)="refresh()" src="../../assets/refresh.png" alt="Refresh" height="42" width="42">
         </div>
+      </div>
     </div>
+  </div>
+  <div *ngIf="remotePds">
+    <div class="col-xs-12" style="margin-top: 20px;">
+      <p><strong>Remote PDs</strong></p>
+      <div id="remotePD" class="col-md-2 col-sm-3 panel panel-default pd-item" *ngFor="let pd of remotePds">
+        <div class="panel-body">
+          <img class="center-block" src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
+          <br>
+          <p>{{pd.name}}</p>
+          <p>{{pd.ip}}</p>
+        </div>
+      </div>
+      <div id="newRemotePD" class="col-md-2 col-sm-3 panel pd-item">
+        <div class="panel-body">
+          <img class="centered" src="../../assets/add_new.png" alt="Add new" height="42" width="42">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
