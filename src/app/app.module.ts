@@ -24,6 +24,10 @@ import {HttpInterceptor} from "./providers/http-interceptor.service";
 import {Router} from "@angular/router";
 import { MountComponent } from './mount/mount.component';
 
+export function httpInterceptorFactory(backend: XHRBackend, defaultOptions: RequestOptions, localStorageService: LocalStorageService, router: Router,) {
+  return new HttpInterceptor(backend, defaultOptions, localStorageService, router);
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,9 +54,7 @@ import { MountComponent } from './mount/mount.component';
     SyncService,
     {
       provide: HttpInterceptor,
-      useFactory: (backend: XHRBackend, defaultOptions: RequestOptions, localStorageService: LocalStorageService, router: Router,) => {
-        return new HttpInterceptor(backend, defaultOptions, localStorageService, router);
-      },
+      useFactory: httpInterceptorFactory,
       deps: [XHRBackend, RequestOptions, LocalStorageService, Router]
     }
   ],
