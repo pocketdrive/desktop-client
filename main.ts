@@ -1,5 +1,4 @@
 import {app, BrowserWindow, screen} from 'electron';
-import * as path from 'path';
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -69,3 +68,7 @@ try {
   // Catch Error
   //throw e;
 }
+
+/*import {SyncRunner} from './src/app/sync-engine/sync-runner';
+const syncRunner = new SyncRunner();
+syncRunner.addNewSyncDirectory('dulaj', 'Documents');*/

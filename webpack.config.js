@@ -365,6 +365,14 @@ module.exports = {
             {
                 "test": /\.ts$/,
                 "loader": "@ngtools/webpack"
+            },
+            {
+              test: /\.jsx?$/,
+              loader: 'babel-loader',
+              exclude: /node_modules/,
+              query: {
+                presets: ['es2015']
+              }
             }
         ]
     },

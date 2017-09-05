@@ -9,7 +9,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowJs": true,
-    "target": "es5",
+    "allowSyntheticDefaultImports":true,
+    "module": "es6",
+    "target": "es6",
     "paths": {
       "environments": [
         "./environments"
@@ -25,6 +27,11 @@
     "lib": [
       "es2016",
       "dom"
+    ],
+    "exclude": [
+      "**/*.js",
+      "test.ts",
+      "**/*.spec.ts"
     ]
   }
 }

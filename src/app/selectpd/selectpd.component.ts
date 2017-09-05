@@ -22,6 +22,11 @@ export class SelectpdComponent implements OnInit {
   }
 
   ngOnInit() {
+    var sync_runner_1 = require("../sync-engine/sync-runner");
+    var syncRunner = new sync_runner_1.SyncRunner();
+    // syncRunner.addNewSyncDirectory('dulaj', 'Documents');
+    const hash = require('../sync-engine/sync-actions').getFileChecksum('F:\\Pictures\\1.png');
+    console.log(hash);
   }
 
   get localPds(): PocketDrive[] {

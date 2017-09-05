@@ -1,12 +1,17 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports":true,
+    "moduleResolution": "node",
     "outDir": "../out-tsc/app",
-    "module": "es2015",
+    "module": "es6",
+    "target": "es6",
     "baseUrl": "",
     "types": []
   },
   "exclude": [
+    "**/*.js",
     "test.ts",
     "**/*.spec.ts"
   ]
