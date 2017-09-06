@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {User} from "../models/user";
 import {LocalStorageService} from "../providers/localstorage.service";
+import {Constants} from "../constants";
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = this.localStorageService.getItem('user');
+    this.user = this.localStorageService.getItem(Constants.localStorageKeys.loggedInuser);
     this.router.navigate(['explorer'], {relativeTo: this.activatedRoute});
   }
 
