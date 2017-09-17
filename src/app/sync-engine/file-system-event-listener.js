@@ -122,6 +122,21 @@ export default class FileSystemEventListener {
           });
         }
 
+        // Modify file
+        for (let i = 0; i < (change.modifiedFiles).length; i++) {
+          console.log("Watch [FILE][MODIFY]  ", change.modifiedFiles[i]);
+
+          MetadataDBHandler.updateEntry(change.modifiedFiles[i], {
+            action: SyncEvents.MODIFY,
+            user: this.username,
+            deviceIDs: this.deviceIDs,
+            path: _.replace(change.modifiedFiles[i], this.pdPath, ''),
+            type: ChangeType.FILE,
+            current_cs: metaUtils.getCheckSum(change.modifiedFiles[i]),
+            sequence_id: this.sequenceID++
+          });
+        }
+
         // Delete files
         for (let i = change.removedFiles.length - 1; i > -1; i--) {
           console.log("Watch [FILE][DELETE] ", change.removedFiles[i]);
@@ -137,7 +152,7 @@ export default class FileSystemEventListener {
         }
 
         // Delete directories
-        for (let i = change.removedFolders.length - 1; i > -1 ; i--) {
+        for (let i = change.removedFolders.length - 1; i > -1; i--) {
           console.log("Watch [DIR][DELETE] ", change.removedFolders[i]);
 
           MetadataDBHandler.updateEntry(change.removedFolders[i], {
@@ -146,21 +161,6 @@ export default class FileSystemEventListener {
             deviceIDs: this.deviceIDs,
             path: _.replace(change.removedFolders[i], this.pdPath, ''),
             type: ChangeType.DIR,
-            sequence_id: this.sequenceID++
-          });
-        }
-
-        // Modify file
-        for (let i = 0; i < (change.modifiedFiles).length; i++) {
-          console.log("Watch [FILE][MODIFY]  ", change.modifiedFiles[i]);
-
-          MetadataDBHandler.updateEntry(change.modifiedFiles[i], {
-            action: SyncEvents.MODIFY,
-            user: this.username,
-            deviceIDs: this.deviceIDs,
-            path: _.replace(change.modifiedFiles[i], this.pdPath, ''),
-            type: ChangeType.FILE,
-            current_cs: metaUtils.getCheckSum(change.modifiedFiles[i]),
             sequence_id: this.sequenceID++
           });
         }

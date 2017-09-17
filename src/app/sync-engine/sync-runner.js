@@ -24,10 +24,12 @@ export class SyncRunner {
 
     this.communicator = new SyncCommunicator(this.username, this.ip);
 
-    while (true){
+    /*while (true){
       this.doSync();
-      await this.sleep();
-    }
+      await this.sleep(2000);
+    }*/
+
+    this.doSync();
   }
 
   stopSync() {
@@ -81,8 +83,8 @@ export class SyncRunner {
     });
   }
 
-  sleep() {
-    return new Promise(resolve => setTimeout(resolve, 2000));
+  sleep(milliSeconds) {
+    return new Promise(resolve => setTimeout(resolve, milliSeconds));
   }
 
 }

@@ -363,6 +363,7 @@ export class SyncCommunicator {
         afterSyncFile(dbEntry.sequence_id, dbEntry.path, dbEntry.current_cs);
         break;
     }
+
   }
 
   async syncNewDirectory(sourcePath, targetPath) {
