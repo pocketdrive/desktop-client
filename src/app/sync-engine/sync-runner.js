@@ -72,14 +72,40 @@ export class SyncRunner {
     delete this.eventListeners[folder];
   }
 
-  doSync(){
+  doSync() {
     console.log("Sync called");
     MetadataDBHandler.getChanges().then(async (changes) => {
       changes = changes.data;
+      let i = 0;
+      let tryCount = 0;
 
-      for (let i = 0; i < changes.length; i++) {
+      const intervalId = setInterval(async () => {
+        console.log('lock: ', this.communicator.serializeLock);
+
+        if (this.communicator.serializeLock === 0) {
+          tryCount = 0;
+          if (i < changes.length) {
+            await this.communicator.sendSyncRequest(changes[i++]);
+          }
+          else {
+            clearInterval(intervalId);
+          }
+        }
+        else if (tryCount === 10) {
+          this.communicator.serializeLock = 0;
+          this.communicator = new SyncCommunicator(this.username, this.ip);
+          i--;
+          tryCount = 0;
+        }
+        else {
+          tryCount++;
+        }
+
+      }, 500);
+
+      /*for (let i = 0; i < changes.length; i++) {
         await this.communicator.sendSyncRequest(changes[i]);
-      }
+      }*/
     });
   }
 

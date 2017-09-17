@@ -29,6 +29,7 @@ import {environment} from "../../environments/index";
 export class SyncCommunicator {
 
   constructor(username, clientIP) {
+    this.serializeLock  = 0;
     this.username = username;
     this.clientIP = clientIP;
     this.clientPort = environment.syncPort;
@@ -194,6 +195,9 @@ export class SyncCommunicator {
   }
 
   async sendSyncRequest(dbEntry) {
+    console.log('+++++++');
+    this.serializeLock++;
+
     if (dbEntry.type === 'file') {
       switch (dbEntry.action) {
         case SyncEvents.NEW:
@@ -299,7 +303,6 @@ export class SyncCommunicator {
       case SyncActions.doNothingDir:
         console.log('Sync response [DIR][DO_NOTHING_DIR]: ', dbEntry.path);
 
-
         afterSyncFile(dbEntry.sequence_id, dbEntry.path, dbEntry.current_cs);
         break;
 
@@ -307,7 +310,6 @@ export class SyncCommunicator {
         console.log('Sync response [FILE][UPDATE]: ', dbEntry.path);
 
         const newFileChecksum = await ChunkBasedSynchronizer.getChecksumOfChunks(fullPath);
-        console.log('cs >>>>>>>> ', newFileChecksum);
         const transmissionData = await ChunkBasedSynchronizer.getTransmissionData(response.oldFileChecksums, newFileChecksum, fs.readFileSync(fullPath));
 
         /*this.socket.emit('action', {
@@ -364,9 +366,12 @@ export class SyncCommunicator {
         break;
     }
 
+    console.log('-------');
+    this.serializeLock--;
   }
 
   async syncNewDirectory(sourcePath, targetPath) {
+    this.serializeLock++;
     // TODO: Recheck for folder names with dots.
     const fullSourcePath = path.resolve(environment.PD_FOLDER_PATH, sourcePath);
 
@@ -391,6 +396,8 @@ export class SyncCommunicator {
         }
       }
     });
+
+    this.serializeLock--;
   }
 
 }
