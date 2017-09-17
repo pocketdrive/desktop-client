@@ -1,0 +1,3 @@
+// Things to do at installation
+1. Create Pocket Drive directory in user home
+2. Save uuid of device to local storage

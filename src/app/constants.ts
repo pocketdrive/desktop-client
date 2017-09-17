@@ -4,7 +4,8 @@ export const Constants = {
     loggedInuser: 'logged-in-user',
     selectedPd: 'selected-pd',
     mountDetails: 'mount-details',
-    networkType: 'network-type'
+    networkType: 'network-type',
+    syncFolders:'syncFolders'
   },
 
   networkTypes: {

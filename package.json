@@ -48,6 +48,7 @@
     "core-js": "2.4.1",
     "dgram": "^1.0.1",
     "electron-json-storage-sync": "^1.1.0",
+    "fast-tcp": "^3.3.2",
     "folder-hash": "^1.1.1",
     "fsmonitor": "^0.2.4",
     "hasha": "^3.0.0",
@@ -58,8 +59,10 @@
     "node-cmd": "^3.0.0",
     "node-ssdp-lite": "^0.2.0",
     "rxjs": "5.4.0",
+    "stream": "0.0.2",
     "stream-to-buffer": "^0.1.0",
     "underscore": "^1.8.3",
+    "uuid": "^3.1.0",
     "zone.js": "0.8.11"
   },
   "devDependencies": {

@@ -12,16 +12,18 @@ import {Constants} from "../constants";
 export class HomeComponent implements OnInit {
 
   user: User;
+  count: number = 0;
 
   constructor(private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private localStorageService: LocalStorageService) {
+              private activatedRoute: ActivatedRoute) {
     HomeComponent.loadAdminLTEScripts();
   }
 
   ngOnInit() {
-    this.user = this.localStorageService.getItem(Constants.localStorageKeys.loggedInuser);
+    this.user = LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser);
     this.router.navigate(['explorer'], {relativeTo: this.activatedRoute});
+
+
   }
 
   static loadAdminLTEScripts() {

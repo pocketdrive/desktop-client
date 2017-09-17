@@ -37,8 +37,8 @@ export class SelectpdComponent implements OnInit {
   }
 
   selectLocalPd(pd: PocketDrive): void {
-    this.localStorageService.setItem(Constants.localStorageKeys.selectedPd, JSON.stringify(pd));
-    this.localStorageService.setItem(Constants.localStorageKeys.networkType, Constants.networkTypes.local);
+    LocalStorageService.setItem(Constants.localStorageKeys.selectedPd, JSON.stringify(pd));
+    LocalStorageService.setItem(Constants.localStorageKeys.networkType, Constants.networkTypes.local);
     this.router.navigate(['signin']);
   }
 

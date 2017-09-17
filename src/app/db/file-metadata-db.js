@@ -144,11 +144,11 @@ export default class MetadataDBHandler {
         });
     }
 
-    static getUpdatedFilesOfUser(username) {
+    static getChanges() {
         let result = {success: false};
 
         return new Promise((resolve) => {
-            databases.fileMetaDataDb.find({user: username}).sort({sequence_id: 1}).exec((err, docs) => {
+            databases.fileMetaDataDb.find({}).sort({sequence_id: 1}).exec((err, docs) => {
                 if (err) {
                     this.handleError(result, 'DB Error. Cannot read meta data', err);
                 } else {

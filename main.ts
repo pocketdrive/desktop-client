@@ -1,6 +1,7 @@
 import {app, BrowserWindow, screen} from 'electron';
+const path = require('path');
 
-let win, serve;
+let mainWindow, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
 
@@ -10,11 +11,9 @@ if (serve) {
 
 function createWindow() {
 
-  let electronScreen = screen;
-  let size = electronScreen.getPrimaryDisplay().workAreaSize;
+  let size = screen.getPrimaryDisplay().workAreaSize;
 
-  // Create the browser window.
-  win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
     width: size.width,
@@ -23,52 +22,80 @@ function createWindow() {
     // height: 600
   });
 
-  // and load the index.html of the app.
-  win.loadURL('file://' + __dirname + '/index.html');
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
 
-  // Open the DevTools.
   if (serve) {
-    win.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
   }
 
-  // Emitted when the window is closed.
-  win.on('closed', () => {
-    // Dereference the window object, usually you would store window
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    win = null;
+  mainWindow.on('closed', () => {
+    /*
+    Dereference the window object, usually you would store window
+    in an array if your app supports multi windows, this is the time
+    when you should delete the corresponding element.
+    */
+    mainWindow = null;
   });
+
+  /*mainWindow.on('minimize', function (event) {
+    event.preventDefault()
+    mainWindow.hide();
+  });
+
+
+  mainWindow.on('close', function (event) {
+    // if (!app.isQuiting) {
+    event.preventDefault()
+    mainWindow.hide();
+    // }
+    return false;
+  });
+
+  let contextMenu = Menu.buildFromTemplate([
+
+    {
+      label: 'Show App', click: function () {
+      mainWindow.show();
+    }
+    },
+    {
+      label: 'Quit', click: function () {
+      // app.isQuiting = true;
+      app.quit();
+
+    }
+    }
+  ]);
+
+  let appIcon = new Tray(path.join(__dirname, '../src/assets/tray-icon.png'));
+  // appIcon.setToolTip('Electron.js App');
+  appIcon.setContextMenu(contextMenu);*/
+
 }
 
 try {
 
-  // This method will be called when Electron has finished
-  // initialization and is ready to create browser windows.
-  // Some APIs can only be used after this event occurs.
+  /*
+  This method will be called when Electron has finished
+  initialization and is ready to create browser windows.
+  Some APIs can only be used after this event occurs.
+  */
   app.on('ready', createWindow);
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
+    // On OS X it is common for applications and their menu bar to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
       app.quit();
     }
   });
 
   app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (win === null) {
+    // On OS X it's common to re-create a window in the app when the dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) {
       createWindow();
     }
   });
 
 } catch (e) {
-  // Catch Error
-  //throw e;
 }
-
-/*import {SyncRunner} from './src/app/sync-engine/sync-runner';
-const syncRunner = new SyncRunner();
-syncRunner.addNewSyncDirectory('dulaj', 'Documents');*/

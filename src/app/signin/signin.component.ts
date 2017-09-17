@@ -22,13 +22,12 @@ export class SigninComponent implements OnInit {
 
   constructor(private router: Router,
               private location: Location,
-              private localStorageService: LocalStorageService,
               private userService: UserService,
               private httpInterceptor: HttpInterceptor) {
   }
 
   ngOnInit(): void {
-    this.selectedPD = this.localStorageService.getItem(Constants.localStorageKeys.selectedPd);
+    this.selectedPD = LocalStorageService.getItem(Constants.localStorageKeys.selectedPd);
   }
 
   goBack(): void {
@@ -42,9 +41,9 @@ export class SigninComponent implements OnInit {
       this.userService.signIn(this.username, this.password)
         .then((data) => {
           if (data.success) {
-            this.localStorageService.setItem(Constants.localStorageKeys.authToken, data.token);
-            this.localStorageService.setItem(Constants.localStorageKeys.loggedInuser, data.data.user);
-            this.localStorageService.setItem(Constants.localStorageKeys.mountDetails, data.data.mount);
+            LocalStorageService.setItem(Constants.localStorageKeys.authToken, data.token);
+            LocalStorageService.setItem(Constants.localStorageKeys.loggedInuser, data.data.user);
+            LocalStorageService.setItem(Constants.localStorageKeys.mountDetails, data.data.mount);
 
             this.httpInterceptor.token = data.token;
             this.router.navigate(['home']);

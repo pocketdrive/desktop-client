@@ -98,7 +98,7 @@ export class HttpInterceptor extends Http {
 
   private getToken(): string {
     if (!this.token) {
-      this.token = this.localStorageService.getItem(Constants.localStorageKeys.authToken);
+      this.token = LocalStorageService.getItem(Constants.localStorageKeys.authToken);
     }
 
     return this.token;
@@ -106,7 +106,7 @@ export class HttpInterceptor extends Http {
 
   getFullUrl(url: string): string {
     if (!this.baseUrl) {
-      let pd: PocketDrive = JSON.parse(this.localStorageService.getItem(Constants.localStorageKeys.selectedPd));
+      let pd: PocketDrive = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
       this.baseUrl = 'http://' + pd.ip + ':' + pd.port;
     }
 

@@ -7,7 +7,7 @@ export class LocalStorageService {
   constructor() {
   }
 
-  setItem(key: string, value: string): void {
+  static setItem(key: string, value: string): void {
     const result = storage.set(key, value);
 
     if (!result.status) {
@@ -17,7 +17,7 @@ export class LocalStorageService {
     }
   }
 
-  getItem(key: string): any {
+  static getItem(key: string): any {
     const result = storage.get(key);
 
     if (!result.status) {
