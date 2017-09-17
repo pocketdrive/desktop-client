@@ -34,7 +34,7 @@ export class SyncCommunicator {
     this.clientIP = clientIP;
     this.clientPort = environment.syncPort;
 
-    console.log('Connecting to PD at ', this.clientIP, ':', this.clientPort);
+    console.log('Opening sync socket ', this.clientIP, ':', this.clientPort);
 
     // Initialize socket connection to send messages
     this.socket = new Socket({
@@ -43,6 +43,11 @@ export class SyncCommunicator {
     });
 
     this.csDBHandler = new ChecksumDBHandler();
+  }
+
+  close(){
+    console.log('Closing sync socket');
+    this.socket.destroy();
   }
 
   initCommunication() {

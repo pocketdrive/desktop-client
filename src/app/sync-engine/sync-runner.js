@@ -93,6 +93,7 @@ export class SyncRunner {
         }
         else if (tryCount === 10) {
           this.communicator.serializeLock = 0;
+          this.communicator.close();
           this.communicator = new SyncCommunicator(this.username, this.ip);
           i--;
           tryCount = 0;
