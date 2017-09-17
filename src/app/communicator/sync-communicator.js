@@ -29,7 +29,7 @@ import {environment} from "../../environments/index";
 export class SyncCommunicator {
 
   constructor(username, clientIP) {
-    this.serializeLock  = 0;
+    this.serializeLock = 0;
     this.username = username;
     this.clientIP = clientIP;
     this.clientPort = environment.syncPort;
@@ -45,7 +45,7 @@ export class SyncCommunicator {
     this.csDBHandler = new ChecksumDBHandler();
   }
 
-  close(){
+  close() {
     console.log('Closing sync socket');
     this.socket.destroy();
   }
@@ -134,7 +134,7 @@ export class SyncCommunicator {
               fs.renameSync(fullOldPath, fullPath);
             } else {
               const names = _.split(json.path, '/');
-              const newName = names[names.length -1] + '(conflicted-copy-of-' + json.username + '-' + CommonUtils.getDeviceName() + '-' + CommonUtils.getDateTime() + ')';
+              const newName = names[names.length - 1] + '(conflicted-copy-of-' + json.username + '-' + CommonUtils.getDeviceName() + '-' + CommonUtils.getDateTime() + ')';
               const newPath = _.replace(json.path, names[names.length - 1], newName);
               const fullNewPath = path.resolve(environment.PD_FOLDER_PATH, newPath);
 
@@ -200,7 +200,6 @@ export class SyncCommunicator {
   }
 
   async sendSyncRequest(dbEntry) {
-    console.log('+++++++');
     this.serializeLock++;
 
     if (dbEntry.type === 'file') {
@@ -358,7 +357,7 @@ export class SyncCommunicator {
 
         if (response.isConflict) {
           const names = _.split(dbEntry.path, '/');
-          const newName = names[names.length-1] + '(conflicted-copy-of-' + this.username + '-' + CommonUtils.getDeviceName() + '-' + CommonUtils.getDateTime() + ')';
+          const newName = names[names.length - 1] + '(conflicted-copy-of-' + this.username + '-' + CommonUtils.getDeviceName() + '-' + CommonUtils.getDateTime() + ')';
           const newPath = _.replace(dbEntry.path, names[names.length - 1], newName);
 
           this.syncNewDirectory(dbEntry.path, newPath);
@@ -371,7 +370,6 @@ export class SyncCommunicator {
         break;
     }
 
-    console.log('-------');
     this.serializeLock--;
   }
 

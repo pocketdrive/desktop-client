@@ -1,6 +1,8 @@
 import {app, BrowserWindow, screen} from 'electron';
 const path = require('path');
 
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 let mainWindow, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");

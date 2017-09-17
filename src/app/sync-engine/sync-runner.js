@@ -12,6 +12,7 @@ import MetadataDBHandler from "../db/file-metadata-db";
 export class SyncRunner {
 
   constructor() {
+    this.serializeLock = 0;
     this.eventListeners = [];
     this.username = LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser).username;
     this.ip = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).ip;
@@ -24,12 +25,12 @@ export class SyncRunner {
 
     this.communicator = new SyncCommunicator(this.username, this.ip);
 
-    /*while (true){
-      this.doSync();
-      await this.sleep(2000);
-    }*/
+    setInterval(() => {
+      if(this.serializeLock === 0){
+        this.doSync();
+      }
+    }, 2000);
 
-    this.doSync();
   }
 
   stopSync() {
@@ -72,16 +73,16 @@ export class SyncRunner {
     delete this.eventListeners[folder];
   }
 
-  doSync() {
-    console.log("Sync called");
-    MetadataDBHandler.getChanges().then(async (changes) => {
+  async doSync() {
+    console.log('[SYNC]');
+    this.serializeLock++;
+
+    await MetadataDBHandler.getChanges().then(async (changes) => {
       changes = changes.data;
       let i = 0;
       let tryCount = 0;
 
       const intervalId = setInterval(async () => {
-        console.log('lock: ', this.communicator.serializeLock);
-
         if (this.communicator.serializeLock === 0) {
           tryCount = 0;
           if (i < changes.length) {
@@ -89,6 +90,7 @@ export class SyncRunner {
           }
           else {
             clearInterval(intervalId);
+            this.serializeLock--;
           }
         }
         else if (tryCount === 10) {
@@ -100,13 +102,11 @@ export class SyncRunner {
         }
         else {
           tryCount++;
+          console.log('Retrying to sync: ' , tryCount);
         }
 
       }, 500);
 
-      /*for (let i = 0; i < changes.length; i++) {
-        await this.communicator.sendSyncRequest(changes[i]);
-      }*/
     });
   }
 
