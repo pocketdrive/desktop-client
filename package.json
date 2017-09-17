@@ -58,6 +58,7 @@
     "nedb": "^1.8.0",
     "node-cmd": "^3.0.0",
     "node-ssdp-lite": "^0.2.0",
+    "rabin": "^1.6.0",
     "rxjs": "5.4.0",
     "stream": "0.0.2",
     "stream-to-buffer": "^0.1.0",

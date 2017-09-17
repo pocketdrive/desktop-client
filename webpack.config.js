@@ -199,7 +199,8 @@ module.exports = {
     "node-ssdp-lite": "require('node-ssdp-lite')",
     "fast-tcp": "require('fast-tcp')",
     "stream-to-buffer": "require('stream-to-buffer')",
-    "node-cmd": "require('node-cmd')"
+    "node-cmd": "require('node-cmd')",
+    "rabin": "require('rabin')"
   },
   "resolve": {
     "extensions": [

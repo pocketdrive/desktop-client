@@ -35,15 +35,6 @@ export class SyncCommunicator {
 
     console.log('Connecting to PD at ', this.clientIP, ':', this.clientPort);
 
-    // Initialize server to listen for incoming messages
-    /*this.server = new Server();
-    this.server.on('connection', (socket) => {
-        this.sockObject = socket;
-        this.initCommunication();
-        console.log('socket connected')
-    });
-    this.server.listen(5000);*/
-
     // Initialize socket connection to send messages
     this.socket = new Socket({
       host: this.clientIP,
@@ -316,6 +307,7 @@ export class SyncCommunicator {
         console.log('Sync response [FILE][UPDATE]: ', dbEntry.path);
 
         const newFileChecksum = await ChunkBasedSynchronizer.getChecksumOfChunks(fullPath);
+        console.log('cs >>>>>>>> ', newFileChecksum);
         const transmissionData = await ChunkBasedSynchronizer.getTransmissionData(response.oldFileChecksums, newFileChecksum, fs.readFileSync(fullPath));
 
         /*this.socket.emit('action', {

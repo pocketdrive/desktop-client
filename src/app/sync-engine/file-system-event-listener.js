@@ -8,6 +8,7 @@ import MetadataDBHandler from '../db/file-metadata-db';
 import * as metaUtils from '../sync-engine/meta-data';
 import {getFolderChecksum} from "./sync-actions";
 import {environment} from "../../environments/index";
+import ChecksumDBHandler from "../db/checksum-db";
 
 const log = console.log;
 
@@ -59,14 +60,19 @@ export default class FileSystemEventListener {
         // Rename directory
         console.log("Watcher [DIR][RENAME] ", change.removedFolders[0], ' --> ', change.addedFolders[0]);
 
+        const newPath = _.replace(change.addedFolders[0], this.pdPath, '');
+        const oldPath = _.replace(change.removedFolders[0], this.pdPath, '');
+
+        ChecksumDBHandler.updateFilePathsAfterRename(oldPath, newPath);
+
         MetadataDBHandler.insertEntry({
           action: SyncEvents.RENAME,
           user: this.username,
           deviceIDs: this.deviceIDs,
-          path: _.replace(change.addedFolders[0], this.pdPath, ''),
+          path: newPath,
           type: ChangeType.DIR,
           current_cs: await getFolderChecksum(change.addedFolders[0]),
-          oldPath: _.replace(change.removedFolders[0], this.pdPath, ''),
+          oldPath: oldPath,
           sequence_id: this.sequenceID++
         });
 
