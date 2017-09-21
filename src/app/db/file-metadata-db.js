@@ -157,7 +157,6 @@ export default class MetadataDBHandler {
                 }
 
                 resolve(result);
-
             });
         });
     }

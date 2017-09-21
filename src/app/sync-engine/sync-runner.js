@@ -26,7 +26,7 @@ export class SyncRunner {
     this.communicator = new SyncCommunicator(this.username, this.ip);
 
     setInterval(() => {
-      if(this.serializeLock === 0){
+      if (this.serializeLock === 0) {
         this.doSync();
       }
     }, 2000);
@@ -74,7 +74,7 @@ export class SyncRunner {
   }
 
   async doSync() {
-    console.log('[SYNC]');
+    console.log('[SYNC][CLIENT_TO_SERVER]');
     this.serializeLock++;
 
     await MetadataDBHandler.getChanges().then(async (changes) => {
@@ -83,26 +83,34 @@ export class SyncRunner {
       let tryCount = 0;
 
       const intervalId = setInterval(async () => {
-        if (this.communicator.serializeLock === 0) {
-          tryCount = 0;
-          if (i < changes.length) {
-            await this.communicator.sendSyncRequest(changes[i++]);
+        if (!this.communicator.serverSyncCalled) {
+          if (this.communicator.serializeLock === 0) {
+            tryCount = 0;
+            if (i < changes.length) {
+              await this.communicator.sendSyncRequest(changes[i++]);
+            }
+            else {
+              console.log('[SYNC][SERVER_TO_CLIENT]');
+              await this.communicator.requestServerToClientSync();
+            }
+          }
+
+          else if (tryCount === 10) {
+            this.communicator.serializeLock = 0;
+            this.communicator.close(); // TODO: Have to wait until bigger files are sent completely.
+            this.communicator = new SyncCommunicator(this.username, this.ip);
+            i--;
+            tryCount = 0;
           }
           else {
-            clearInterval(intervalId);
-            this.serializeLock--;
+            tryCount++;
+            console.log('Retrying to sync: ', tryCount);
           }
         }
-        else if (tryCount === 10) {
-          this.communicator.serializeLock = 0;
-          this.communicator.close();
-          this.communicator = new SyncCommunicator(this.username, this.ip);
-          i--;
-          tryCount = 0;
-        }
-        else {
-          tryCount++;
-          console.log('Retrying to sync: ' , tryCount);
+        else if (this.communicator.serializeLock === 0) {
+          clearInterval(intervalId);
+          this.communicator.serverSyncCalled = false;
+          this.serializeLock--;
         }
 
       }, 500);

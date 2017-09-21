@@ -1,4 +1,4 @@
-import {Server, Socket} from 'fast-tcp';
+import {Socket, Server} from 'fast-tcp';
 import path from 'path';
 import fs from 'fs';
 import streamToBuffer from 'stream-to-buffer';
@@ -7,7 +7,6 @@ import * as _ from 'lodash';
 
 import {SyncMessages, SyncActions, SyncActionMessages, SyncEvents} from '../sync-engine/sync-constants';
 import * as syncActions from '../sync-engine/sync-actions';
-import ChecksumDBHandler from "../db/checksum-db";
 import {modifyExistingFile} from "../sync-engine/sync-actions";
 import {createOrModifyFile} from "../sync-engine/sync-actions";
 import {getFileChecksum} from "../sync-engine/sync-actions";
@@ -30,6 +29,7 @@ export class SyncCommunicator {
 
   constructor(username, clientIP) {
     this.serializeLock = 0;
+    this.serverSyncCalled = false;
     this.username = username;
     this.clientIP = clientIP;
     this.clientPort = environment.syncPort;
@@ -42,7 +42,13 @@ export class SyncCommunicator {
       port: this.clientPort
     });
 
-    this.csDBHandler = new ChecksumDBHandler();
+    this.server = new Server();
+    this.server.on('connection', (socket) => {
+      this.initCommunication(socket);
+      console.log('Server connected')
+    });
+    this.server.listen(6000);
+
   }
 
   close() {
@@ -50,8 +56,8 @@ export class SyncCommunicator {
     this.socket.destroy();
   }
 
-  initCommunication() {
-    this.sockObject.on('message', async (json, callBack) => {
+  initCommunication(socket) {
+    socket.on('message', async (json, callBack) => {
       const fullPath = path.resolve(environment.PD_FOLDER_PATH, json.path);
 
       switch (json.type) {
@@ -158,13 +164,13 @@ export class SyncCommunicator {
         /*case sm.requestFile:
             console.log('Fie message: ', json.path);
             const fPath = path.resolve(environment.PD_FOLDER_PATH, json.path);
-            const writeStream = this.sockObject.stream('file', {type: sm.newFile, path: json.path});
+            const writeStream = this.socket.stream('file', {type: sm.newFile, path: json.path});
             fs.createReadStream(fPath).pipe(writeStream);
             break;*/
       }
     });
 
-    this.sockObject.on('action', async (json, callBack) => {
+    socket.on('action', async (json, callBack) => {
       const fullPath = path.resolve(environment.PD_FOLDER_PATH, json.path);
 
       switch (json.type) {
@@ -176,7 +182,7 @@ export class SyncCommunicator {
       }
     });
 
-    this.sockObject.on('file', function (readStream, json) {
+    socket.on('file', function (readStream, json) {
       console.log('Sync file [FILE_COPY]: ', json.path);
 
       const fullPath = path.resolve(environment.PD_FOLDER_PATH, json.path);
@@ -189,7 +195,7 @@ export class SyncCommunicator {
       });
     });
 
-    this.sockObject.on('transmissionData', (readStream, json) => {
+    socket.on('transmissionData', (readStream, json) => {
       console.log('Sync transmissionData: ', json.path);
 
       streamToBuffer(readStream, (err, transmissionData) => {
@@ -401,6 +407,18 @@ export class SyncCommunicator {
     });
 
     this.serializeLock--;
+  }
+
+  requestServerToClientSync() {
+    this.serverSyncCalled = true;
+    this.serializeLock++;
+
+    this.socket.emit('action', {
+      type: SyncActionMessages.serverToPdSync,
+      username: this.username
+    }, () => {
+      this.serializeLock--;
+    });
   }
 
 }
