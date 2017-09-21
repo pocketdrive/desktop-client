@@ -97,8 +97,8 @@ export class SyncRunner {
 
           else if (tryCount === 10) {
             this.communicator.serializeLock = 0;
-            this.communicator.close(); // TODO: Have to wait until bigger files are sent completely.
-            this.communicator = new SyncCommunicator(this.username, this.ip);
+            this.communicator.closeSocket(); // TODO: Have to wait until bigger files are sent completely.
+            this.communicator.openSocket();
             i--;
             tryCount = 0;
           }
