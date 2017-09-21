@@ -91,6 +91,14 @@ export class SyncCommunicator {
               callBack(await createOrModifyFile(fullPath, json.current_cs, json.synced_cs));
             }
           }
+          if (syncActions.checkExistence(fullOldPath) && syncActions.checkExistence(fullPath)){
+            const currentChecksumOld = getFileChecksum(fullOldPath);
+            const currentChecksumNew = getFileChecksum(fullPath);
+
+            if(currentChecksumOld === currentChecksumNew){
+              fs.unlinkSync(fullOldPath);
+            }
+          }
           else {
             callBack(await createOrModifyFile(fullPath, json.current_cs, json.synced_cs));
           }
