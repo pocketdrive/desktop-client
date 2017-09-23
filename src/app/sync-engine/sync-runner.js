@@ -19,6 +19,10 @@ export class SyncRunner {
   }
 
   async startSync(syncFolders) {
+    await MetadataDBHandler.getNextSequenceID().then((result) => {
+      FileSystemEventListener.sequenceID = result.data;
+    });
+
     _.each(syncFolders, (folder) => {
       this.addNewSyncDirectory(this.username, folder.name);
     });
