@@ -26,7 +26,7 @@ export class SyncRunner {
     this.communicator = new SyncCommunicator(this.username, this.ip);
 
     setInterval(() => {
-      if (this.serializeLock === 0) {
+      if (this.serializeLock === 0 && !FileSystemEventListener.isWatcherRunning) {
         this.doSync();
       }
     }, 2000);

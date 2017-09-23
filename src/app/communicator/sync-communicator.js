@@ -53,7 +53,7 @@ export class SyncCommunicator {
     this.socket.destroy();
   }
 
-  openSocket(){
+  openSocket() {
     this.socket = new Socket({
       host: this.clientIP,
       port: this.clientPort
@@ -91,11 +91,11 @@ export class SyncCommunicator {
               callBack(await createOrModifyFile(fullPath, json.current_cs, json.synced_cs));
             }
           }
-          if (syncActions.checkExistence(fullOldPath) && syncActions.checkExistence(fullPath)){
+          if (syncActions.checkExistence(fullOldPath) && syncActions.checkExistence(fullPath)) {
             const currentChecksumOld = getFileChecksum(fullOldPath);
             const currentChecksumNew = getFileChecksum(fullPath);
 
-            if(currentChecksumOld === currentChecksumNew){
+            if (currentChecksumOld === currentChecksumNew) {
               fs.unlinkSync(fullOldPath);
             }
           }
@@ -150,7 +150,11 @@ export class SyncCommunicator {
           if (checkExistence(fullOldPath) && await getFolderChecksum(fullOldPath) === json.current_cs) {
             if (!checkExistence(fullPath)) {
               fs.renameSync(fullOldPath, fullPath);
-            } else {
+            }
+            else if (await getFolderChecksum(fullOldPath) === await getFolderChecksum(fullPath)) {
+              fs.rmdirSync(fullOldPath);
+            }
+            else {
               const names = _.split(json.path, '/');
               const newName = names[names.length - 1] + '(conflicted-copy-of-' + json.username + '-' + CommonUtils.getDeviceName() + '-' + CommonUtils.getDateTime() + ')';
               const newPath = _.replace(json.path, names[names.length - 1], newName);
@@ -165,6 +169,9 @@ export class SyncCommunicator {
           else {
             if (!checkExistence(fullPath)) {
               callBack({action: SyncActions.streamFolder, isConflict: false});
+            }
+            else if (await getFolderChecksum(fullPath) === json.current_cs) {
+              callBack({action: SyncActions.doNothingDir});
             }
             else {
               callBack({action: SyncActions.streamFolder, isConflict: true});
@@ -310,8 +317,10 @@ export class SyncCommunicator {
       case SyncActions.justCopy:
         console.log('Sync response [FILE][JUST_COPY]: ', dbEntry.path);
 
-        let writeStream = this.socket.stream('file', {username: this.username, path: dbEntry.path});
-        fs.createReadStream(fullPath).pipe(writeStream);
+        if (checkExistence(fullPath)) {
+          let writeStream = this.socket.stream('file', {username: this.username, path: dbEntry.path});
+          fs.createReadStream(fullPath).pipe(writeStream);
+        }
 
         afterSyncFile(dbEntry.sequence_id, dbEntry.path, dbEntry.current_cs);
         break;
@@ -340,7 +349,7 @@ export class SyncCommunicator {
             path: dbEntry.path
         });*/
 
-        writeStream = this.socket.stream('transmissionData', {username: this.username, path: dbEntry.path});
+        let writeStream = this.socket.stream('transmissionData', {username: this.username, path: dbEntry.path});
 
         let bufferStream = new stream.PassThrough();
         bufferStream.end(transmissionData);

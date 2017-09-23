@@ -19,6 +19,8 @@ export const ChangeType = {FILE: 'file', DIR: 'dir'};
 export default class FileSystemEventListener {
 
   constructor(username, folder, deviceIDs) {
+    FileSystemEventListener.isWatcherRunning = false;
+
     this.pdPath = environment.PD_FOLDER_PATH;
     this.username = username;
     this.deviceIDs = deviceIDs;
@@ -51,7 +53,7 @@ export default class FileSystemEventListener {
     monitor.on('change', async (change) => {
       this.changes.push(change);
 
-      if(this.serializeLock === 0){
+      if (this.serializeLock === 0) {
         this.consume(this.changes.shift());
       }
     });
@@ -59,6 +61,8 @@ export default class FileSystemEventListener {
 
   async consume(change) {
     this.serializeLock++;
+    clearTimeout(FileSystemEventListener.timeOutId);
+    FileSystemEventListener.isWatcherRunning = true;
 
     // Change watcher relative paths to absolute paths
     _.each(change, (changeList, changeListName) => {
@@ -125,13 +129,13 @@ export default class FileSystemEventListener {
       for (let i = 0; i < change.addedFiles.length; i++) {
         console.log("Watcher [FILE][NEW] ", change.addedFiles[i]);
 
-        const path = _.replace(change.addedFiles[i], this.pdPath, '');
+        const newPath = _.replace(change.addedFiles[i], this.pdPath, '');
 
-        MetadataDBHandler.updateEntry(path, {
+        MetadataDBHandler.updateEntry(newPath, {
           action: SyncEvents.NEW,
           user: this.username,
           deviceIDs: this.deviceIDs,
-          path: path,
+          path: newPath,
           type: ChangeType.FILE,
           current_cs: metaUtils.getCheckSum(change.addedFiles[i]),
           sequence_id: this.sequenceID++
@@ -142,13 +146,13 @@ export default class FileSystemEventListener {
       for (let i = 0; i < change.modifiedFiles.length; i++) {
         console.log("Watch [FILE][MODIFY]  ", change.modifiedFiles[i]);
 
-        const path  = _.replace(change.modifiedFiles[i], this.pdPath, '');
+        const newPath = _.replace(change.modifiedFiles[i], this.pdPath, '');
 
-        MetadataDBHandler.updateEntry(path, {
+        MetadataDBHandler.updateEntry(newPath, {
           action: SyncEvents.MODIFY,
           user: this.username,
           deviceIDs: this.deviceIDs,
-          path: path,
+          path: newPath,
           type: ChangeType.FILE,
           current_cs: metaUtils.getCheckSum(change.modifiedFiles[i]),
           sequence_id: this.sequenceID++
@@ -189,11 +193,15 @@ export default class FileSystemEventListener {
 
     }
 
-    if(this.changes.length > 0){
+    if (this.changes.length > 0) {
       this.consume(this.changes.shift());
     }
 
     this.serializeLock--;
+
+    FileSystemEventListener.timeOutId = setTimeout(() => {
+      FileSystemEventListener.isWatcherRunning = false;
+    }, 5000);
   }
 
   stop() {

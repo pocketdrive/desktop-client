@@ -10,7 +10,7 @@ export class ChunkBasedSynchronizer {
 
   static async getChecksumOfChunks(filename) {
     let hashFilename = `${uuid()}`;
-    let wait = await new Promise((resolve) => {
+    await new Promise((resolve) => {
       cmd.get(
         `./node_modules/.bin/rabin "${filename}" --bits=8 --min=8192 --max=65536 > ${hashFilename}`,
         function (err, data, stderr) {
@@ -96,7 +96,6 @@ export class ChunkBasedSynchronizer {
         out = Buffer.concat([out, existing_file.slice(oldChunk[1], oldChunk[1] + oldChunk[2])]);
       }
     }
-    console.log(out.byteLength, existing_file.byteLength);
     fs.writeFileSync(`${oldFilePath}`, out)
   }
 }
