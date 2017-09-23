@@ -5,6 +5,7 @@ import {platform} from 'os';
 import {Samba} from "../models/samba";
 import {PocketDrive} from "../models/pocketdrive";
 import {User} from "../models/user";
+import {exec} from "child_process";
 
 const sudo = require('sudo-prompt');
 
@@ -72,7 +73,6 @@ export class MountComponent implements OnInit {
   }
 
   private unmountLinux(): void {
-    console.log('unmount: ', this.mountOnOff);
     const command = 'umount ~/PocketDrive';
 
     // noinspection JSUnusedLocalSymbols
@@ -86,15 +86,37 @@ export class MountComponent implements OnInit {
   }
 
   private mountWindows(): void {
+    const command = 'net use z: ' + '\\\\' + this.pocketDrive.ip + '\\' + this.user.username + ' /user:' + this.samba.username + ' ' + this.samba.password;
+
+    // noinspection JSUnusedLocalSymbols
+    exec(command, function (error, stdout, stderr) {
+      if (error) {
+        console.error("Mount failed: ", error);
+        this.mountOnOff = !this.mountOnOff;
+        LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
+      }
+    });
   }
 
   private unmountWindows(): void {
+    const command = 'net use z: /delete';
+
+    // noinspection JSUnusedLocalSymbols
+    sudo.exec(command, options, (error, stdout, stderr) => {
+      if (error) {
+        console.error("Unmount failed: ", error);
+        this.mountOnOff = !this.mountOnOff;
+        LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
+      }
+    });
   }
 
   private mountMac(): void {
+    // TODO
   }
 
   private unmountMac(): void {
+    // TODO
   }
 
 }
