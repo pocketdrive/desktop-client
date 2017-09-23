@@ -20,10 +20,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser);
+    this.user = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser));
     this.router.navigate(['explorer'], {relativeTo: this.activatedRoute});
-
-
   }
 
   static loadAdminLTEScripts() {

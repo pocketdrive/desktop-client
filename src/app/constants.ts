@@ -5,7 +5,8 @@ export const Constants = {
     selectedPd: 'selected-pd',
     mountDetails: 'mount-details',
     networkType: 'network-type',
-    syncFolders:'syncFolders'
+    syncFolders:'syncFolders',
+    mountOnOff:'mountOnOff'
   },
 
   networkTypes: {

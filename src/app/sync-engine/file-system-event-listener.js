@@ -32,9 +32,7 @@ export default class FileSystemEventListener {
     this.changes = [];
     this.serializeLock = 0;
 
-    MetadataDBHandler.getNextSequenceID().then((result) => {
-      this.sequenceID = result.data;
-    });
+    console.log('sequenceID', FileSystemEventListener.sequenceID);
   }
 
   start() {
@@ -88,7 +86,7 @@ export default class FileSystemEventListener {
         type: ChangeType.DIR,
         current_cs: await getFolderChecksum(change.addedFolders[0]),
         oldPath: oldPath,
-        sequence_id: this.sequenceID++
+        sequence_id: FileSystemEventListener.sequenceID++
       });
 
     } else if (change.addedFiles.length === 1 && change.removedFiles.length === 1) {
@@ -106,7 +104,7 @@ export default class FileSystemEventListener {
         path: path,
         oldPath: oldPath,
         current_cs: metaUtils.getCheckSum(change.addedFiles[0]),
-        sequence_id: this.sequenceID++
+        sequence_id: FileSystemEventListener.sequenceID++
       });
 
     } else {
@@ -121,7 +119,7 @@ export default class FileSystemEventListener {
           path: _.replace(change.addedFolders[i], this.pdPath, ''),
           type: ChangeType.DIR,
           current_cs: await getFolderChecksum(change.addedFolders[i]),
-          sequence_id: this.sequenceID++
+          sequence_id: FileSystemEventListener.sequenceID++
         });
       }
 
@@ -138,7 +136,7 @@ export default class FileSystemEventListener {
           path: newPath,
           type: ChangeType.FILE,
           current_cs: metaUtils.getCheckSum(change.addedFiles[i]),
-          sequence_id: this.sequenceID++
+          sequence_id: FileSystemEventListener.sequenceID++
         });
       }
 
@@ -155,7 +153,7 @@ export default class FileSystemEventListener {
           path: newPath,
           type: ChangeType.FILE,
           current_cs: metaUtils.getCheckSum(change.modifiedFiles[i]),
-          sequence_id: this.sequenceID++
+          sequence_id: FileSystemEventListener.sequenceID++
         });
       }
 
@@ -171,7 +169,7 @@ export default class FileSystemEventListener {
           deviceIDs: this.deviceIDs,
           path: path,
           type: ChangeType.FILE,
-          sequence_id: this.sequenceID++
+          sequence_id: FileSystemEventListener.sequenceID++
         });
       }
 
@@ -187,7 +185,7 @@ export default class FileSystemEventListener {
           deviceIDs: this.deviceIDs,
           path: path,
           type: ChangeType.DIR,
-          sequence_id: this.sequenceID++
+          sequence_id: FileSystemEventListener.sequenceID++
         });
       }
 

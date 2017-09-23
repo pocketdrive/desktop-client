@@ -27,7 +27,7 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.selectedPD = LocalStorageService.getItem(Constants.localStorageKeys.selectedPd);
+    this.selectedPD = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
   }
 
   goBack(): void {
@@ -41,9 +41,9 @@ export class SigninComponent implements OnInit {
       this.userService.signIn(this.username, this.password)
         .then((data) => {
           if (data.success) {
-            LocalStorageService.setItem(Constants.localStorageKeys.authToken, data.token);
-            LocalStorageService.setItem(Constants.localStorageKeys.loggedInuser, data.data.user);
-            LocalStorageService.setItem(Constants.localStorageKeys.mountDetails, data.data.mount);
+            LocalStorageService.setItem(Constants.localStorageKeys.authToken, JSON.stringify(data.token));
+            LocalStorageService.setItem(Constants.localStorageKeys.loggedInuser, JSON.stringify(data.data.user));
+            LocalStorageService.setItem(Constants.localStorageKeys.mountDetails, JSON.stringify(data.data.mount));
 
             this.httpInterceptor.token = data.token;
             this.router.navigate(['home']);

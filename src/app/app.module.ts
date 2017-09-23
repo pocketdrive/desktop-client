@@ -24,8 +24,8 @@ import {HttpInterceptor} from "./providers/http-interceptor.service";
 import {Router} from "@angular/router";
 import { MountComponent } from './mount/mount.component';
 
-export function httpInterceptorFactory(backend: XHRBackend, defaultOptions: RequestOptions, localStorageService: LocalStorageService, router: Router,) {
-  return new HttpInterceptor(backend, defaultOptions, localStorageService, router);
+export function httpInterceptorFactory(backend: XHRBackend, defaultOptions: RequestOptions, router: Router,) {
+  return new HttpInterceptor(backend, defaultOptions, router);
 }
 
 @NgModule({
@@ -55,7 +55,7 @@ export function httpInterceptorFactory(backend: XHRBackend, defaultOptions: Requ
     {
       provide: HttpInterceptor,
       useFactory: httpInterceptorFactory,
-      deps: [XHRBackend, RequestOptions, LocalStorageService, Router]
+      deps: [XHRBackend, RequestOptions, Router]
     }
   ],
   bootstrap: [AppComponent]

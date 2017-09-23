@@ -200,7 +200,9 @@ module.exports = {
     "fast-tcp": "require('fast-tcp')",
     "stream-to-buffer": "require('stream-to-buffer')",
     "node-cmd": "require('node-cmd')",
-    "rabin": "require('rabin')"
+    "rabin": "require('rabin')",
+    "sudo-prompt": "require('sudo-prompt')",
+    "md5-file": "require('md5-file')"
   },
   "resolve": {
     "extensions": [
@@ -279,8 +281,8 @@ module.exports = {
         "loaders": [
           "exports-loader?module.exports.toString()",
           "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-          "postcss-loader",
-          "sass-loader"
+          "postcss-loader"
+          // ,"sass-loader"
         ]
       },
       {

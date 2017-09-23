@@ -15,7 +15,6 @@ export class HttpInterceptor extends Http {
 
   constructor(private backend: ConnectionBackend,
               private defaultOptions: RequestOptions,
-              private localStorageService: LocalStorageService,
               private router: Router) {
     super(backend, defaultOptions);
   }
@@ -98,7 +97,7 @@ export class HttpInterceptor extends Http {
 
   private getToken(): string {
     if (!this.token) {
-      this.token = LocalStorageService.getItem(Constants.localStorageKeys.authToken);
+      this.token = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.authToken));
     }
 
     return this.token;

@@ -14,7 +14,7 @@ export class SyncRunner {
   constructor() {
     this.serializeLock = 0;
     this.eventListeners = [];
-    this.username = LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser).username;
+    this.username = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser)).username;
     this.ip = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).ip;
   }
 

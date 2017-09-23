@@ -17,8 +17,7 @@ export class SelectpdComponent implements OnInit {
 
   constructor(private router: Router,
               private location: Location,
-              private pocketDriveService: PocketDriveService,
-              private localStorageService: LocalStorageService) {
+              private pocketDriveService: PocketDriveService) {
   }
 
   ngOnInit() {
@@ -38,7 +37,7 @@ export class SelectpdComponent implements OnInit {
 
   selectLocalPd(pd: PocketDrive): void {
     LocalStorageService.setItem(Constants.localStorageKeys.selectedPd, JSON.stringify(pd));
-    LocalStorageService.setItem(Constants.localStorageKeys.networkType, Constants.networkTypes.local);
+    LocalStorageService.setItem(Constants.localStorageKeys.networkType, JSON.stringify(Constants.networkTypes.local));
     this.router.navigate(['signin']);
   }
 
