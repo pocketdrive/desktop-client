@@ -6,6 +6,7 @@ export const Constants = {
     mountDetails: 'mount-details',
     networkType: 'network-type',
     syncFolders:'syncFolders',
+    autoMount:'autoMount',
     mountOnOff:'mountOnOff'
   },
 

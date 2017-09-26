@@ -53,6 +53,7 @@
     "folder-hash": "^1.1.1",
     "fsmonitor": "^0.2.4",
     "hasha": "^3.0.0",
+    "ip": "^1.1.5",
     "jquery": "^3.2.1",
     "jsonwebtoken": "^7.4.3",
     "md5-file": "^3.2.2",
@@ -63,10 +64,10 @@
     "rxjs": "5.4.0",
     "stream": "0.0.2",
     "stream-to-buffer": "^0.1.0",
+    "sudo-prompt": "^7.1.0",
     "underscore": "^1.8.3",
     "uuid": "^3.1.0",
-    "zone.js": "0.8.11",
-    "sudo-prompt": "^7.1.0"
+    "zone.js": "0.8.11"
   },
   "devDependencies": {
     "@angular/cli": "1.0.6",

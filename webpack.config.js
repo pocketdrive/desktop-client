@@ -202,7 +202,8 @@ module.exports = {
     "node-cmd": "require('node-cmd')",
     "rabin": "require('rabin')",
     "sudo-prompt": "require('sudo-prompt')",
-    "md5-file": "require('md5-file')"
+    "md5-file": "require('md5-file')",
+    "ip": "require('ip')",
   },
   "resolve": {
     "extensions": [

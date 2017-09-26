@@ -34,8 +34,6 @@ export class SyncCommunicator {
     this.clientIP = clientIP;
     this.clientPort = environment.syncPort;
 
-    console.log('Opening sync socket ', this.clientIP, ':', this.clientPort);
-
     // Initialize socket connection to send messages
     this.openSocket();
 
@@ -46,6 +44,7 @@ export class SyncCommunicator {
     });
     this.server.listen(6000);
 
+    this.requestServerToConnect();
   }
 
   closeSocket() {
@@ -58,6 +57,14 @@ export class SyncCommunicator {
       host: this.clientIP,
       port: this.clientPort
     });
+  }
+
+  requestServerToConnect(){
+    this.socket.emit('action',
+      {
+        type: SyncActionMessages.connectToClient,
+        ip: require('ip').address()
+      });
   }
 
   initCommunication(socket) {

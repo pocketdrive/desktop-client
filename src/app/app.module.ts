@@ -23,6 +23,7 @@ import {SyncService} from "./providers/sync.service";
 import {HttpInterceptor} from "./providers/http-interceptor.service";
 import {Router} from "@angular/router";
 import { MountComponent } from './mount/mount.component';
+import {MountService} from "./providers/mount.service";
 
 export function httpInterceptorFactory(backend: XHRBackend, defaultOptions: RequestOptions, router: Router,) {
   return new HttpInterceptor(backend, defaultOptions, router);
@@ -52,6 +53,7 @@ export function httpInterceptorFactory(backend: XHRBackend, defaultOptions: Requ
     UserService,
     LocalStorageService,
     SyncService,
+    MountService,
     {
       provide: HttpInterceptor,
       useFactory: httpInterceptorFactory,

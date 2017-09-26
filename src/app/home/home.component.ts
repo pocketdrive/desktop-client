@@ -3,6 +3,10 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {User} from "../models/user";
 import {LocalStorageService} from "../providers/localstorage.service";
 import {Constants} from "../constants";
+import {SyncService} from "../providers/sync.service";
+import {MountService} from "../providers/mount.service";
+
+const ipc = require('electron').ipcRenderer
 
 @Component({
   selector: 'app-home',
@@ -15,13 +19,40 @@ export class HomeComponent implements OnInit {
   count: number = 0;
 
   constructor(private router: Router,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private syncService: SyncService,
+              private mountService: MountService) {
     HomeComponent.loadAdminLTEScripts();
   }
 
   ngOnInit() {
     this.user = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser));
     this.router.navigate(['explorer'], {relativeTo: this.activatedRoute});
+
+    // Signout dialog action buttons
+    ipc.on('signout-dialog-selection', (event, index) => {
+      if (index === 0) {
+        this.signOut();
+      }
+    });
+
+    setTimeout(() => {
+      // Mount with PD
+      if (this.mountService.mountOnOff && this.mountService.autoMount) {
+        this.mountService.mount();
+      }
+
+      // Start Client-PD sync
+      this.syncService.startSync();
+    }, 2000);
+
+  }
+
+  signOut(): void {
+    //TODO: remove file watchers and unmount network partition, disconnect sockets
+    this.mountService.unmount();
+
+    this.router.navigate(['']);
   }
 
   static loadAdminLTEScripts() {
@@ -33,4 +64,7 @@ export class HomeComponent implements OnInit {
     document.getElementsByTagName('head')[0].appendChild(node);
   }
 
+  showSignOutDialog(): void {
+    ipc.send('open-signout-dialog');
+  }
 }

@@ -1,6 +1,9 @@
 import {app, BrowserWindow, screen} from 'electron';
 const path = require('path');
 
+const ipc = require('electron').ipcMain;
+const dialog = require('electron').dialog;
+
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 let mainWindow, serve;
@@ -98,6 +101,20 @@ try {
       createWindow();
     }
   });
+
+  ipc.on('open-signout-dialog', function (event) {
+    const options = {
+      type: 'info',
+      title: 'Sign Out',
+      message: "Mounted partition will be disconnected and synchronization will be stopped!\n\n" +
+      "Do you want to sign out from Pocket Drive?",
+      buttons: ['Yes', 'No']
+    };
+
+    dialog.showMessageBox(options, function (index) {
+      event.sender.send('signout-dialog-selection', index)
+    })
+  })
 
 } catch (e) {
 }

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {Folder} from "../models/folder";
 import {HttpInterceptor} from "./http-interceptor.service";
 import {environment} from "environments";
@@ -12,13 +12,16 @@ const uuid = require('uuid/v4');
 import {SyncRunner} from '../sync-engine/sync-runner';
 
 @Injectable()
-export class SyncService {
+export class SyncService  implements OnInit {
 
   private url = 'sync/';
 
   folders: Folder[];
 
-  constructor(private http: HttpInterceptor) {
+  constructor(private http: HttpInterceptor){
+  }
+
+  ngOnInit() {
   }
 
   async getSyncFolderList(): Promise<Folder[]> {
@@ -31,9 +34,6 @@ export class SyncService {
       .catch(this.handleError);
 
     this.saveSyncFoldersToLocalStorage();
-
-    this.startSync();
-
     return this.folders;
   }
 
@@ -80,14 +80,7 @@ export class SyncService {
   }
 
   startSync(): void {
-    let syncFolders: Folder[] = [];
-
-    for (let i = 0; i < this.folders.length; i++) {
-      if (this.folders[i].sync) {
-        syncFolders.push(this.folders[i]);
-      }
-    }
-
+    let syncFolders = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.syncFolders));
     let syncRunner = new SyncRunner();
     syncRunner.startSync(syncFolders);
   }

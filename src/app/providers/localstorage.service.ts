@@ -13,7 +13,7 @@ export class LocalStorageService {
     if (!result.status) {
       console.log("Error occurred while saving " + key + " to local storage", result.error);
     } else {
-      console.log(key + ' saved to local storage', value);
+      console.log(key + ' saved to local storage');
     }
   }
 

@@ -68,7 +68,7 @@ export class SyncRunner {
   }
 
   addNewSyncDirectory(username, folderName) {
-    this.eventListeners[folderName] = new FileSystemEventListener(username, folderName, []);  // TODO
+    this.eventListeners[folderName] = new FileSystemEventListener(username, folderName, []);  // TODO: device ids
     this.eventListeners[folderName].start();
   }
 
