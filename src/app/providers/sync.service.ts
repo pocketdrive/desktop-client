@@ -17,8 +17,10 @@ export class SyncService  implements OnInit {
   private url = 'sync/';
 
   folders: Folder[];
+  syncRunner: SyncRunner;
 
   constructor(private http: HttpInterceptor){
+    this.syncRunner = new SyncRunner();
   }
 
   ngOnInit() {
@@ -81,8 +83,11 @@ export class SyncService  implements OnInit {
 
   startSync(): void {
     let syncFolders = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.syncFolders));
-    let syncRunner = new SyncRunner();
-    syncRunner.startSync(syncFolders);
+    this.syncRunner.startSync(syncFolders);
+  }
+
+  stopSync(): void{
+    this.syncRunner.stopSync();
   }
 
 }

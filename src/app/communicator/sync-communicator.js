@@ -34,22 +34,14 @@ export class SyncCommunicator {
     this.clientIP = clientIP;
     this.clientPort = environment.syncPort;
 
-    // Initialize socket connection to send messages
+    // Create bidirectional socket connection
     this.openSocket();
-
-    this.server = new Server();
-    this.server.on('connection', (socket) => {
-      this.initCommunication(socket);
-      console.log('Server connected')
-    });
-    this.server.listen(6000);
-
+    this.startServer();
     this.requestServerToConnect();
   }
 
-  closeSocket() {
-    console.log('Closing sync socket');
-    this.socket.destroy();
+  destroy() {
+    this.requestServerToDisconnect();
   }
 
   openSocket() {
@@ -59,12 +51,40 @@ export class SyncCommunicator {
     });
   }
 
-  requestServerToConnect(){
+  closeSocket() {
+    console.log('Closing sync socket');
+    this.socket.destroy();
+  }
+
+  requestServerToConnect() {
     this.socket.emit('action',
       {
         type: SyncActionMessages.connectToClient,
         ip: require('ip').address()
       });
+  }
+
+  requestServerToDisconnect() {
+    this.socket.emit('action',
+      {
+        type: SyncActionMessages.disconnectFromClient
+      }, () => {
+        this.stopServer();
+        this.closeSocket();
+      });
+  }
+
+  startServer() {
+    this.server = new Server();
+    this.server.on('connection', (socket) => {
+      this.initCommunication(socket);
+      console.log('Server connected')
+    });
+    this.server.listen(6000);
+  }
+
+  stopServer() {
+    this.server.close();
   }
 
   initCommunication(socket) {

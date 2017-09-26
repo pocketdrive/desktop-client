@@ -29,7 +29,7 @@ export class SyncRunner {
 
     this.communicator = new SyncCommunicator(this.username, this.ip);
 
-    setInterval(() => {
+    this.syncInervalId = setInterval(() => {
       if (this.serializeLock === 0 && !FileSystemEventListener.isWatcherRunning) {
         this.doSync();
       }
@@ -38,7 +38,12 @@ export class SyncRunner {
   }
 
   stopSync() {
+    _.each(this.eventListeners, (listener) => {
+      listener.stop();
+    });
 
+    clearTimeout(this.syncInervalId);
+    this.communicator.destroy();
   }
 
   onClientConnect(username) {

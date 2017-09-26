@@ -37,7 +37,7 @@ export default class FileSystemEventListener {
 
   start() {
     // noinspection JSUnusedLocalSymbols
-    let monitor = fsmonitor.watch(this.baseDirectory, {
+    this.monitor = fsmonitor.watch(this.baseDirectory, {
       matches: function (relPath) {
         return relPath.match(/(\/\.)|(\\\.)|^(\.)/) === null;
       },
@@ -48,13 +48,18 @@ export default class FileSystemEventListener {
 
     console.log('Add watch ', this.baseDirectory);
 
-    monitor.on('change', async (change) => {
+    this.monitor.on('change', async (change) => {
       this.changes.push(change);
 
       if (this.serializeLock === 0) {
         this.consume(this.changes.shift());
       }
     });
+  }
+
+  stop(){
+    console.log('Remove watch ', this.baseDirectory);
+    this.monitor.close();
   }
 
   async consume(change) {

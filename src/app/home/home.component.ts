@@ -49,9 +49,8 @@ export class HomeComponent implements OnInit {
   }
 
   signOut(): void {
-    //TODO: remove file watchers and unmount network partition, disconnect sockets
+    this.syncService.stopSync();
     this.mountService.unmount();
-
     this.router.navigate(['']);
   }
 
