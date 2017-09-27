@@ -49,7 +49,7 @@ export class MountService {
     }
   }
 
-  unmount(): void {
+  unmount(): Promise<any> {
     const currentPlatform = platform();
 
     switch (currentPlatform) {
@@ -58,8 +58,7 @@ export class MountService {
         break;
 
       case 'linux':
-        this.unmountLinux();
-        break;
+        return this.unmountLinux();
 
       case 'darwin':
         this.unmountMac();
@@ -80,16 +79,20 @@ export class MountService {
     });
   }
 
-  private unmountLinux(): void {
+  private unmountLinux(): Promise<any> {
     const command = 'umount ~/PocketDrive';
 
-    // noinspection JSUnusedLocalSymbols
-    sudo.exec(command, options, (error, stdout, stderr) => {
-      if (error) {
-        console.error("Unmount failed: ", error);
-        this.mountOnOff = !this.mountOnOff;
-        LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
-      }
+    return new Promise((resolve) => {
+      // noinspection JSUnusedLocalSymbols
+      sudo.exec(command, options, (error, stdout, stderr) => {
+        if (error) {
+          console.error("Unmount failed: ", error);
+          this.mountOnOff = !this.mountOnOff;
+          LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
+        } else {
+          resolve(error);
+        }
+      });
     });
   }
 

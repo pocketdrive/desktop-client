@@ -50,8 +50,9 @@ export class HomeComponent implements OnInit {
 
   signOut(): void {
     this.syncService.stopSync();
-    this.mountService.unmount();
-    this.router.navigate(['']);
+    this.mountService.unmount().then(() => {
+      this.router.navigate(['']);
+    });
   }
 
   static loadAdminLTEScripts() {
