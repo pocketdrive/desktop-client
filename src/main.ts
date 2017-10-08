@@ -4,6 +4,8 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {AppModule} from './app/app.module';
 import {environment} from 'environments';
 
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 if (environment.production) {
   enableProdMode();
 }
