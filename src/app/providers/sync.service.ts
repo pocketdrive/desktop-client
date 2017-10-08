@@ -10,17 +10,24 @@ const uuid = require('uuid/v4');
 
 // const SyncRunner = require('../sync-engine/sync-runner');
 import {SyncRunner} from '../sync-engine/sync-runner';
+import NisCommunicator from '../communicator/nis-communicator';
 
 @Injectable()
-export class SyncService  implements OnInit {
+export class SyncService implements OnInit {
 
   private url = 'sync/';
 
   folders: Folder[];
   syncRunner: SyncRunner;
+  nisCommunicator: NisCommunicator;
 
-  constructor(private http: HttpInterceptor){
+  constructor(private http: HttpInterceptor) {
     this.syncRunner = new SyncRunner();
+    this.nisCommunicator = new NisCommunicator('1002', '1001', 'dulaj');
+    setInterval(() => {
+      console.log('NIC called >>>>>>>>>>>>>');
+      this.nisCommunicator.requestFileHashes();
+    }, 5000);
   }
 
   ngOnInit() {
@@ -86,7 +93,7 @@ export class SyncService  implements OnInit {
     this.syncRunner.startSync(syncFolders);
   }
 
-  stopSync(): void{
+  stopSync(): void {
     this.syncRunner.stopSync();
   }
 

@@ -204,6 +204,8 @@ module.exports = {
     "sudo-prompt": "require('sudo-prompt')",
     "md5-file": "require('md5-file')",
     "ip": "require('ip')",
+    "fs-extra": "require('fs-extra')",
+    "mkdirp": "require('mkdirp')"
   },
   "resolve": {
     "extensions": [

@@ -78,7 +78,7 @@ export class SyncCommunicator {
     this.server = new Server();
     this.server.on('connection', (socket) => {
       this.initCommunication(socket);
-      console.log('Server connected')
+      console.log('Sync server connected')
     });
     this.server.listen(6000);
   }

@@ -6,7 +6,8 @@ export const environment = {
   syncPort: 5000,
 
   PD_FOLDER_PATH: '/home/dulaj/PocketDrive/home-pd/',
-  NE_DB_PATH_CHECKSUM: '/home/dulaj/.PocketDrive/checksum.db',
-  NE_DB_PATH_FILE_METADATA: '/home/dulaj/.PocketDrive/meta_data.db'
-
+  NIS_DATA_PATH: '/home/dulaj/.PocketDrive/home-pd/nis-data/',
+  NE_DB_PATH_CHECKSUM: '/home/dulaj/.PocketDrive/home-pd/checksum.db',
+  NE_DB_PATH_FILE_METADATA: '/home/dulaj/.PocketDrive/home-pd/meta_data.db',
+  NE_DB_PATH_NIS: '/home/dulaj/.PocketDrive/home-pd/nis.db'
 };
