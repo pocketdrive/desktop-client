@@ -21,8 +21,9 @@ export class SyncPdPdComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.nisService.getNisFolderList().then((result) => {
-      this.folders = result;
+    this.nisService.getNisFolderList().then((folders) => {
+      this.folders = folders;
+      console.log("All folders: ", folders);
     })
   }
 
@@ -47,7 +48,7 @@ export class SyncPdPdComponent implements OnInit {
 
       if (this.selectedFolder.syncDevices) {
         for (let j = 0; j < this.selectedFolder.syncDevices.length; j++) {
-          if (this.nisService.remotePds[i].uuid === this.selectedFolder.syncDevices[j].uuid) {
+          if (this.nisService.remotePds[i].uuid === this.selectedFolder.syncDevices[j]) {
             item.sync = true;
             break;
           }
@@ -59,10 +60,9 @@ export class SyncPdPdComponent implements OnInit {
 
       this.deviceList.push(item);
     }
-
   }
 
-  ok(): void{
+  ok(): void {
     this.nisService.setNisFolderList(this.folders);
   }
 

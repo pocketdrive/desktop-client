@@ -13,7 +13,6 @@ export class NisService {
 
   private url = 'nis/';
 
-  folders: NisFolder[];
   user: User;
   remotePds: PocketDrive[];
 
@@ -31,29 +30,27 @@ export class NisService {
       .catch(this.handleError);
   }
 
-  async getNisFolderList(): Promise<NisFolder[]> {
+  getNisFolderList(): Promise<NisFolder[]> {
     let message = {type: 'getNisFolders', clientId: environment.deviceId};
 
-    await this.http
+    return this.http
       .post(this.url + 'list', JSON.stringify(message))
       .toPromise()
-      .then((response) => this.folders = response.json())
+      .then(response => response.json() as NisFolder[])
       .catch(this.handleError);
-
-    return this.folders;
   }
 
   setNisFolderList(folders: NisFolder[]): void {
     let message = {type: 'setNisFolders', data: {clientId: environment.deviceId}};
     let syncFolders = [];
 
-    for (let i = 0; i < this.folders; i++) {
-      if (this.folders[i].syncDevices.length > 0) {
-        syncFolders.push({name: this.folders[i].name, syncDevices: this.folders[i].syncDevices});
+    for (let i = 0; i < folders.length; i++) {
+      if (folders[i].syncDevices && folders[i].syncDevices.length > 0) {
+        syncFolders.push({name: folders[i].name, syncDevices: folders[i].syncDevices});
       }
     }
 
-    message.data.syncFolders = syncFolders;
+    message.data['syncFolders'] = syncFolders;
 
     this.http
       .post(this.url + 'set', JSON.stringify(message))
