@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
       }
 
       // Start Client-PD sync
-      this.syncService.startSync(); //TODO: uncomment this line
+      // this.syncService.startSync(); //TODO: uncomment this line
     }, 2000);
 
   }

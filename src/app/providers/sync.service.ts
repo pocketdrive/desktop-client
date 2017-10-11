@@ -25,11 +25,11 @@ export class SyncService implements OnInit {
     this.syncRunner = new SyncRunner();
 
     //TODO: uncomment following lines
-    this.nisCommunicator = new NisCommunicator('1002', '1001', 'dulaj');
+    /*this.nisCommunicator = new NisCommunicator('1002', '1001', 'dulaj');
     setInterval(() => {
       console.log('[NIS]');
       this.nisCommunicator.requestFileHashes();
-    }, 10000);
+    }, 10000);*/
   }
 
   ngOnInit() {

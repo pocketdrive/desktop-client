@@ -4,67 +4,86 @@
     PD & PD Sync
     <small>Connected devices</small>
   </h1>
-  <!--<ol class="breadcrumb">
-      <li><a href="#"><i class="fa fa-da
-</section>shboard"></i> Home</a></li>
-      <li class="active">Dashboard</li>
-  </ol>-->
 </section>
 
 <!-- Main content -->
 <section class="content">
-  <div class="row" *ngFor="let link of links">
+  <div class="row">
     <div class="col-xs-12">
-      <div class="panel panel-default">
-        <div class="panel-body" (click)="openSyncSettings(link)">
-          <div class="col-md-2 col-sm-4 panel panel-default pd-item">
-            <div class="panel-body">
-              <img class="center-block" src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
-              <br>
-              <p>{{link[0].name}}</p>
-            </div>
-          </div>
-          <style>
-            .middleArrow {
-              display: block;
-              margin: 0 auto;
-              height: 100%;
-              width: 100%;
-              transform: scale(0.4);
-            }
-          </style>
-          <div class="col-md-2 col-sm-3 pd-item">
-            <div class="middleArrow">
-              <img style="display: block;width: 100%;height: 100%;margin: 0 auto;" class="center-block"
-                   src="../../assets/arrow.png" alt="PD Image">
-            </div>
-          </div>
-          <div class="col-md-2 col-sm-4 panel panel-default pd-item">
-            <div class="panel-body">
-              <img class="center-block" src="../../assets/pocketdrive.png" alt="PD Image" height="42" width="42">
-              <br>
-              <p>{{link[1].name}}</p>
-            </div>
-          </div>
+      <div class="box">
+        <div class="box-body">
+          <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th></th>
+              <th>Folder Name</th>
+              <th>Size</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let folder of folders">
+              <td>
+                <i class="fa fa-cog" data-toggle="modal" data-target="#deviceModal"
+                   (click)="openDeviceSelectionDialog(folder)"></i>
+              </td>
+              <td>{{folder.name}}</td>
+              <td>{{folder.size}}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
-      <div class="col-sm-12" *ngIf="selectedLink && selectedLink[0].name === link[0].name">
-        <div class="panel panel-default">
-          <div class="panel-body" (click)="openSyncSettings(link)">
-            <form>
-              <div class="form-group">
-                <input type="checkbox" checked>
-                <label> Sync over laptop</label>
-              </div>
-              <div class="form-group">
-                <input type="checkbox">
-                <label> Sync over internet</label>
-              </div>
-            </form>
-          </div>
-        </div>
+        <!-- /.box-body -->
       </div>
     </div>
   </div>
+  <!-- /.box -->
+  <div class="row">
+    <button class="btn btn-primary" (click)="ok()" style="float: right; margin-left: 5px; margin-right: 15px;">Submit
+    </button>
+    <button class="btn btn-default" (click)="cancel()" style="float: right;">Cancel</button>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="deviceModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Select devices to sync with</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>
+                <!--<input type="checkbox" (click)="selectAll()" [(ngModel)]="allSelected">-->
+              </th>
+              <th>Device Name</th>
+              <th>Device ID</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let device of deviceList">
+                <td>
+                  <input type="checkbox" [(ngModel)]="device.sync">
+                </td>
+                <td>{{device.name}}</td>
+                <td>{{device.uuid}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="ok()">Ok</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- Modal -->
+
 </section>
 <!-- /.Main content -->

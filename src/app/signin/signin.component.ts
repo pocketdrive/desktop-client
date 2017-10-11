@@ -8,6 +8,7 @@ import {UserService} from "../providers/user.service";
 import {LocalStorageService} from "../providers/localstorage.service";
 import {HttpInterceptor} from "../providers/http-interceptor.service";
 import {Constants} from "../constants";
+import {User} from "../models/user";
 
 @Component({
   selector: 'app-signin',
@@ -41,8 +42,11 @@ export class SigninComponent implements OnInit {
       this.userService.signIn(this.username, this.password)
         .then((data) => {
           if (data.success) {
+            let user: User = data.data.user;
+            user.password = this.password;
+
             LocalStorageService.setItem(Constants.localStorageKeys.authToken, JSON.stringify(data.token));
-            LocalStorageService.setItem(Constants.localStorageKeys.loggedInuser, JSON.stringify(data.data.user));
+            LocalStorageService.setItem(Constants.localStorageKeys.loggedInuser, JSON.stringify(user));
             LocalStorageService.setItem(Constants.localStorageKeys.mountDetails, JSON.stringify(data.data.mount));
 
             this.httpInterceptor.token = data.token;

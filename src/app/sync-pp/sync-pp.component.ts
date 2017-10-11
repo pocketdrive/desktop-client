@@ -1,15 +1,8 @@
-
 import {Component, OnInit} from '@angular/core';
-import {PocketDrive} from "../models/pocketdrive";
+import {ActivatedRoute, Router} from "@angular/router";
 
-const LINKS = [
-  [{name: 'Office PD', uuid: '1001', ip: '192.168.8.100', port: 3000},
-    {name: 'Home PD', uuid: '1002', ip: '248.112.30.12', port: 3000}
-  ],
-  [{name: 'DVios Floor 1', uuid: '1101', ip: '192.168.1.1', port: 3000},
-    {name: 'DVios Floor 2', uuid: '1001', ip: '192.168.1.10', port: 3000}
-  ]
-];
+import {NisFolder} from "../models/nis-folder";
+import {NisService} from "../providers/nis.service";
 
 @Component({
   selector: 'app-sync-pp',
@@ -18,22 +11,52 @@ const LINKS = [
 })
 export class SyncPdPdComponent implements OnInit {
 
-  links: PocketDrive[][];
-  selectedLink: PocketDrive[];
+  folders: NisFolder[];
+  selectedFolder: NisFolder;
+  deviceList: any[];
 
-  constructor() {
-    this.links = LINKS;
+  constructor(private nisService: NisService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.nisService.getNisFolderList().then((result) => {
+      this.folders = result;
+    })
   }
 
-  openSyncSettings(link: PocketDrive[]): void {
-    if (this.selectedLink && this.selectedLink[0].name === link[0].name) {
-      this.selectedLink = null;
-    } else {
-      this.selectedLink = link;
+  cancel(): void {
+    this.router.navigate(['explorer'], {relativeTo: this.activatedRoute.parent});
+  }
+
+  ok(): void {
+
+  }
+
+  openDeviceSelectionDialog(folder: NisFolder): void {
+    this.selectedFolder = folder;
+    console.log(this.selectedFolder);
+    this.deviceList = [];
+
+    for (let i = 0; i < this.nisService.remotePds.length; i++) {
+      let item = JSON.parse(JSON.stringify(this.nisService.remotePds[i]));
+
+      if (this.selectedFolder.syncDevices) {
+        for (let j = 0; j < this.selectedFolder.syncDevices.length; j++) {
+          if (this.nisService.remotePds[i].uuid === this.selectedFolder.syncDevices[j].uuid) {
+            item.sync = true;
+            break;
+          }
+          else {
+            item.sync = false;
+          }
+        }
+      }
+
+      this.deviceList.push(item);
     }
+
   }
 
 }
