@@ -23,6 +23,8 @@ export class SyncService implements OnInit {
 
   constructor(private http: HttpInterceptor) {
     this.syncRunner = new SyncRunner();
+
+    //TODO: uncomment following lines
     this.nisCommunicator = new NisCommunicator('1002', '1001', 'dulaj');
     setInterval(() => {
       console.log('[NIS]');
