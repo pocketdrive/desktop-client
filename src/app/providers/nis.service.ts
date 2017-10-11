@@ -43,6 +43,25 @@ export class NisService {
     return this.folders;
   }
 
+  setNisFolderList(folders: NisFolder[]): void {
+    let message = {type: 'setNisFolders', data: {clientId: environment.deviceId}};
+    let syncFolders = [];
+
+    for (let i = 0; i < this.folders; i++) {
+      if (this.folders[i].syncDevices.length > 0) {
+        syncFolders.push({name: this.folders[i].name, syncDevices: this.folders[i].syncDevices});
+      }
+    }
+
+    message.data.syncFolders = syncFolders;
+
+    this.http
+      .post(this.url + 'set', JSON.stringify(message))
+      .toPromise()
+      .then((response) => response.json())
+      .catch(this.handleError);
+  }
+
   private handleError(error: any): void {
     console.error('Error handler [SyncService]', error);
   }

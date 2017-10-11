@@ -26,17 +26,20 @@ export class SyncPdPdComponent implements OnInit {
     })
   }
 
-  cancel(): void {
-    this.router.navigate(['explorer'], {relativeTo: this.activatedRoute.parent});
-  }
+  okModal(): void {
+    let syncDevices = [];
 
-  ok(): void {
+    for (let i = 0; i < this.deviceList.length; i++) {
+      if (this.deviceList[i].sync) {
+        syncDevices.push(this.deviceList[i].uuid);
+      }
+    }
 
+    this.selectedFolder.syncDevices = syncDevices;
   }
 
   openDeviceSelectionDialog(folder: NisFolder): void {
     this.selectedFolder = folder;
-    console.log(this.selectedFolder);
     this.deviceList = [];
 
     for (let i = 0; i < this.nisService.remotePds.length; i++) {
@@ -57,6 +60,14 @@ export class SyncPdPdComponent implements OnInit {
       this.deviceList.push(item);
     }
 
+  }
+
+  ok(): void{
+    this.nisService.setNisFolderList(this.folders);
+  }
+
+  cancel(): void {
+    this.router.navigate(['explorer'], {relativeTo: this.activatedRoute.parent});
   }
 
 }
