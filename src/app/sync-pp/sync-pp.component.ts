@@ -23,8 +23,7 @@ export class SyncPdPdComponent implements OnInit {
   ngOnInit() {
     this.nisService.getNisFolderList().then((folders) => {
       this.folders = folders;
-      console.log("All folders: ", folders);
-    })
+    });
   }
 
   okModal(): void {

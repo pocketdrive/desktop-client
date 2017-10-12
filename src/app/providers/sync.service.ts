@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Folder} from "../models/folder";
 import {HttpInterceptor} from "./http-interceptor.service";
 import {environment} from "environments";
@@ -8,31 +8,18 @@ import {Constants} from "../constants";
 const _ = require('lodash');
 const uuid = require('uuid/v4');
 
-// const SyncRunner = require('../sync-engine/sync-runner');
 import {SyncRunner} from '../sync-engine/sync-runner';
-import NisCommunicator from '../communicator/nis-communicator';
 
 @Injectable()
-export class SyncService implements OnInit {
+export class SyncService {
 
   private url = 'sync/';
 
   folders: Folder[];
   syncRunner: SyncRunner;
-  nisCommunicator: NisCommunicator;
 
   constructor(private http: HttpInterceptor) {
     this.syncRunner = new SyncRunner();
-
-    //TODO: uncomment following lines
-    /*this.nisCommunicator = new NisCommunicator('1002', '1001', 'dulaj');
-    setInterval(() => {
-      console.log('[NIS]');
-      this.nisCommunicator.requestFileHashes();
-    }, 10000);*/
-  }
-
-  ngOnInit() {
   }
 
   async getSyncFolderList(): Promise<Folder[]> {

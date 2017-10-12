@@ -7,7 +7,8 @@ export const Constants = {
     networkType: 'network-type',
     syncFolders:'syncFolders',
     autoMount:'autoMount',
-    mountOnOff:'mountOnOff'
+    mountOnOff:'mountOnOff',
+    nisDeviceMap:'nisDeviceMap'
   },
 
   networkTypes: {

@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import {Injectable} from '@angular/core';
 import {environment} from "environments";
 import {NisFolder} from "../models/nis-folder";
@@ -8,6 +10,8 @@ import {LocalStorageService} from "./localstorage.service";
 import {Constants} from "../constants";
 import {PocketDrive} from "../models/pocketdrive";
 
+import NisCommunicator from '../communicator/nis-communicator';
+
 @Injectable()
 export class NisService {
 
@@ -15,10 +19,15 @@ export class NisService {
 
   user: User;
   remotePds: PocketDrive[];
+  nisCommunicator: NisCommunicator;
+  deviceMap: any = {};
+  currentDeviceId: string;
 
   constructor(private http: HttpInterceptor,
               private angularHttp: Http) {
     this.user = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser));
+    this.deviceMap = LocalStorageService.getItem(Constants.localStorageKeys.nisDeviceMap);
+    this.currentDeviceId = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).uuid;
 
     this.angularHttp
       .post(`${environment.centralServer}/login`, {
@@ -28,6 +37,16 @@ export class NisService {
       .toPromise()
       .then((response) => this.remotePds = response.json().device)
       .catch(this.handleError);
+
+    const activeNisMaps = this.deviceMap[this.currentDeviceId];
+    _.each(activeNisMaps, (deviceId) => {
+      let nisCommunicator = new NisCommunicator(this.currentDeviceId, deviceId, this.user.username);
+      setInterval(() => {
+        console.log(`[NIS][${deviceId}]`);
+
+        nisCommunicator.requestFileHashes();
+      }, 10000);
+    })
   }
 
   getNisFolderList(): Promise<NisFolder[]> {
@@ -57,6 +76,28 @@ export class NisService {
       .toPromise()
       .then((response) => response.json())
       .catch(this.handleError);
+
+    this.updateDeviceMap(syncFolders);
+  }
+
+  updateDeviceMap(syncFolders: any[]): void {
+    for (let i = 0; i < syncFolders.length; i++) {
+      for (let j = 0; j < syncFolders[i].syncDevices.length; j++) {
+        if (!this.deviceMap[this.currentDeviceId]) {
+          this.deviceMap[this.currentDeviceId] = {};
+        }
+
+        this.deviceMap[this.currentDeviceId][syncFolders[i].syncDevices[j]] = syncFolders[i].syncDevices[j];
+
+        if (!this.deviceMap[syncFolders[i].syncDevices[j]]) {
+          this.deviceMap[syncFolders[i].syncDevices[j]] = {};
+        }
+
+        this.deviceMap[syncFolders[i].syncDevices[j]][this.currentDeviceId] = [this.currentDeviceId];
+      }
+    }
+
+    LocalStorageService.setItem(Constants.localStorageKeys.nisDeviceMap, this.deviceMap);
   }
 
   private handleError(error: any): void {

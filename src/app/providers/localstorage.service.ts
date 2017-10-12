@@ -21,7 +21,8 @@ export class LocalStorageService {
     const result = storage.get(key);
 
     if (!result.status) {
-      console.log("Error occurred while reading " + key + " from local storage", result.error);
+      console.warn("Error occurred while reading " + key + " from local storage", result.error);
+      return null;
     } else {
       return result.data;
     }
