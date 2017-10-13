@@ -36,6 +36,9 @@ export class SelectpdComponent implements OnInit {
   }
 
   selectLocalPd(pd: PocketDrive): void {
+    // console.log(pd);
+    // pd.uuid = 'f40c2981-7329-40b7-8b04-27f187ae12av';
+    // console.log(pd);
     LocalStorageService.setItem(Constants.localStorageKeys.selectedPd, JSON.stringify(pd));
     LocalStorageService.setItem(Constants.localStorageKeys.networkType, JSON.stringify(Constants.networkTypes.local));
     this.router.navigate(['signin']);

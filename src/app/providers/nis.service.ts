@@ -27,7 +27,7 @@ export class NisService {
               private angularHttp: Http) {
     this.user = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser));
     this.deviceMap = LocalStorageService.getItem(Constants.localStorageKeys.nisDeviceMap);
-    this.currentDeviceId = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).uuid;
+    this.currentDeviceId = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).uuid.trim();
 
     this.angularHttp
       .post(`${environment.centralServer}/login`, {
@@ -35,18 +35,28 @@ export class NisService {
         password: this.user.password
       })
       .toPromise()
-      .then((response) => this.remotePds = response.json().device)
+      .then((response) => this.afterLoadingRemotePds(response))
       .catch(this.handleError);
 
     const activeNisMaps = this.deviceMap[this.currentDeviceId];
-    _.each(activeNisMaps, (deviceId) => {
+    _.each(activeNisMaps, (key, deviceId) => {
       let nisCommunicator = new NisCommunicator(this.currentDeviceId, deviceId, this.user.username);
       setInterval(() => {
-        console.log(`[NIS][${deviceId}]`);
+        console.log(`[NIS][${this.currentDeviceId} --> ${deviceId}]`);
 
         nisCommunicator.requestFileHashes();
       }, 10000);
     })
+  }
+
+  afterLoadingRemotePds(response) {
+    this.remotePds = response.json().device;
+
+    for (let i = 0; i < this.remotePds.length; i++) {
+      if (this.remotePds[i].uuid === this.currentDeviceId) {
+        this.remotePds.splice(i, 1);
+      }
+    }
   }
 
   getNisFolderList(): Promise<NisFolder[]> {

@@ -43,9 +43,9 @@ export class PocketDriveService {
 
     client.on('response', (msg) => {
       let headers = _.split(msg, '\n');
-      let uuid = _.split(headers[2], ':')[2];
+      let uuid = _.split(headers[2], ':')[5];
 
-      if (!self.localPDs.find(pd => pd.uuid === uuid)) {
+      if (uuid && !self.localPDs.find(pd => pd.uuid === uuid)) {
         let host = _.split(_.split(headers[3], '/')[2], ':');
         let name = _.reduce(_.split(_.split(headers[3], '/')[3], '-'), (word1, word2) => {
           return _.capitalize(word1) + ' ' + _.capitalize(word2);
@@ -62,11 +62,11 @@ export class PocketDriveService {
       }
     });
 
-    client.search('urn:schemas-upnp-org:device:PocketDrive');
+    // client.search('urn:schemas-upnp-org:device:PocketDrive');
+    client.search('ssdp:all');
 
     setTimeout(() => {
       client.stop();
-      // console.log(self.localPDs);
       this.router.navigate(['selectpd']);
     }, 3000);
   }
