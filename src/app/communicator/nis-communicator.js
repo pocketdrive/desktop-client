@@ -7,6 +7,8 @@ import * as fse from 'fs-extra';
 
 import {environment} from "../../environments/index";
 import NisClientDbHandler from "../db/nis-db";
+import {LocalStorageService} from "../providers/localstorage.service";
+import {Constants} from "../constants";
 
 /**
  * @author Anuradha Wickramarachchi
@@ -17,8 +19,10 @@ export default class NisCommunicator {
     this.deviceId = deviceId;
     this.otherDeiviceId = otherDeviceId;
     this.username = username;
+    this.ip = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).ip;
+
     this.sock = new Socket({
-      host: 'localhost',
+      host: this.ip,
       port: 5001
     });
   }
@@ -27,7 +31,7 @@ export default class NisCommunicator {
     this.sock.destroy();
 
     this.sock = new Socket({
-      host: 'localhost',
+      host: this.ip,
       port: 5001
     });
   }
@@ -68,7 +72,7 @@ export default class NisCommunicator {
     // create paths if not exist
     const creatorPath = path.join(environment.NIS_DATA_PATH, this.deviceId, this.username);
     const sock = this.sock;
-    const events = (await NisClientDbHandler.getOrderedOperations(this.deviceId, this.username)).data;
+    const events = (await NisClientDbHandler.getOrderedOperations(this.otherDeiviceId, this.username)).data;
 
     this.preparePath(creatorPath);
 
@@ -109,7 +113,7 @@ export default class NisCommunicator {
     });
 
     // update the PD with data from carrier
-    const otherEvents = (await NisClientDbHandler.getOrderedOperations(this.otherDeiviceId, this.username)).data;
+    const otherEvents = (await NisClientDbHandler.getOrderedOperations(this.deviceId, this.username)).data;
     const conflicts = [];
 
     // Detect conflicts
@@ -145,6 +149,13 @@ export default class NisCommunicator {
                 username: this.username
               });
               fs.createReadStream(newFilePath).pipe(writeStream);
+              writeStream.on('finish', () => {
+                if (fs.statSync(newFilePath).isDirectory()) {
+                  fs.rmdirSync(newFilePath);
+                } else {
+                  fs.unlinkSync(newFilePath);
+                }
+              });
             }
             break;
           case 'MODIFY':
@@ -157,6 +168,13 @@ export default class NisCommunicator {
                 username: this.username
               });
               fs.createReadStream(modFilePath).pipe(writeStream);
+              writeStream.on('finish', () => {
+                if (fs.statSync(modFilePath).isDirectory()) {
+                  fs.rmdirSync(modFilePath);
+                } else {
+                  fs.unlinkSync(modFilePath);
+                }
+              });
             }
             break;
           case 'DELETE':

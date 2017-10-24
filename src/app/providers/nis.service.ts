@@ -20,8 +20,20 @@ export class NisService {
   user: User;
   remotePds: PocketDrive[];
   nisCommunicator: NisCommunicator;
-  deviceMap: any = {};
   currentDeviceId: string;
+
+  /**
+   * This is the format of the deviceMap. Same value for key and value is used to remove
+   * redundant values. If we use an array as the value we have to manually remove redundancies.
+   *
+   * {
+   *  "pd-10001" : { "pd_10002": "pd_10002", "pd_10003": "pd_10003" },
+   *  "pd-10002" : { "pd-10001": "pd-10001", "pd-10003": "pd-10003" },
+   *  "pd-10003" : { "pd-10001": "pd-10001", "pd-10002": "pd-10002" }
+   * }
+   *
+   */
+  deviceMap: any = {};
 
   constructor(private http: HttpInterceptor,
               private angularHttp: Http) {
@@ -29,6 +41,11 @@ export class NisService {
     this.deviceMap = LocalStorageService.getItem(Constants.localStorageKeys.nisDeviceMap);
     this.currentDeviceId = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).uuid.trim();
 
+    if (!this.deviceMap) {
+      this.deviceMap = {};
+    }
+
+    // Load all pocketdrives of currently logged in user from the central server
     this.angularHttp
       .post(`${environment.centralServer}/login`, {
         username: this.user.username,
@@ -39,6 +56,7 @@ export class NisService {
       .catch(this.handleError);
 
     const activeNisMaps = this.deviceMap[this.currentDeviceId];
+
     _.each(activeNisMaps, (key, deviceId) => {
       let nisCommunicator = new NisCommunicator(this.currentDeviceId, deviceId, this.user.username);
       setInterval(() => {
@@ -46,7 +64,8 @@ export class NisService {
 
         nisCommunicator.requestFileHashes();
       }, 10000);
-    })
+    });
+
   }
 
   afterLoadingRemotePds(response) {
@@ -103,7 +122,7 @@ export class NisService {
           this.deviceMap[syncFolders[i].syncDevices[j]] = {};
         }
 
-        this.deviceMap[syncFolders[i].syncDevices[j]][this.currentDeviceId] = [this.currentDeviceId];
+        this.deviceMap[syncFolders[i].syncDevices[j]][this.currentDeviceId] = this.currentDeviceId;
       }
     }
 

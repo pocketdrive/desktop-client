@@ -49,10 +49,12 @@ export class HomeComponent implements OnInit {
   }
 
   signOut(): void {
-    this.syncService.stopSync();
+    /*this.syncService.stopSync();
     this.mountService.unmount().then(() => {
       this.router.navigate(['']);
-    });
+    });*/
+
+    this.router.navigate(['']);
   }
 
   static loadAdminLTEScripts() {
