@@ -25,7 +25,8 @@ export class MountService {
 
   constructor() {
     this.autoMount = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.autoMount));
-    this.mountOnOff = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.mountOnOff));
+    this.mountOnOff = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.autoMount));
+    // this.mountOnOff = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.mountOnOff));
     this.samba = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.mountDetails));
     this.pocketDrive = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
     this.user = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser));

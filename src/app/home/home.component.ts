@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {User} from "../models/user";
 import {LocalStorageService} from "../providers/localstorage.service";
 import {Constants} from "../constants";
@@ -36,25 +36,29 @@ export class HomeComponent implements OnInit {
       }
     });
 
+    // Intiate tasks to do after signing in.
     setTimeout(() => {
       // Mount with PD
-      if (this.mountService.mountOnOff && this.mountService.autoMount) {
+      if (this.mountService.autoMount) {
         this.mountService.mount();
       }
 
       // Start Client-PD sync
-      // this.syncService.startSync(); //TODO: uncomment this line
+      this.syncService.startSync(); //TODO: uncomment this line
     }, 2000);
 
   }
 
   signOut(): void {
-    /*this.syncService.stopSync();
-    this.mountService.unmount().then(() => {
-      this.router.navigate(['']);
-    });*/
+    this.syncService.stopSync();
 
-    this.router.navigate(['']);
+    if (this.mountService.autoMount || this.mountService.mountOnOff) {
+      this.mountService.unmount().then(() => {
+        this.router.navigate(['']);
+      });
+    } else {
+      this.router.navigate(['']);
+    }
   }
 
   static loadAdminLTEScripts() {

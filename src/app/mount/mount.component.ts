@@ -20,9 +20,9 @@ export class MountComponent implements OnInit {
     return this.mountService.mountOnOff;
   }
 
-  set mountOnOff(value) {
+  set mountOnOff(value: boolean) {
     this.mountService.mountOnOff = value;
-    LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
+    // LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
     this.mountOnOff ? this.mountService.mount() : this.mountService.unmount();
   }
 
@@ -30,9 +30,13 @@ export class MountComponent implements OnInit {
     return this.mountService.autoMount;
   }
 
-  set autoMount(value) {
+  set autoMount(value: boolean) {
     this.mountService.autoMount = value;
     LocalStorageService.setItem(Constants.localStorageKeys.autoMount, JSON.stringify(this.autoMount));
+
+    if (value && !this.mountOnOff) {
+      this.mountOnOff = true;
+    }
   }
 
 }

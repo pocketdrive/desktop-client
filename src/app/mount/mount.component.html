@@ -13,12 +13,12 @@
       <div class="box">
         <div class="box-body">
           <div class="col-md-12">
-            <input type="checkbox" [(ngModel)]="mountOnOff">
-            <label style="margin-left: 5px;">Mount storage as a drive</label>
+            <input type="checkbox" [(ngModel)]="autoMount">
+            <label style="margin-left: 5px;">Mount at login</label>
           </div>
           <div class="col-md-10">
-            <input type="checkbox" [(ngModel)]="autoMount" [disabled]="!mountOnOff">
-            <label style="margin-left: 5px;">Auto Mount</label>
+            <input type="checkbox" [(ngModel)]="mountOnOff" [disabled]="autoMount">
+            <label style="margin-left: 5px;">Mount now</label>
           </div>
         </div>
         <!-- /.box-body -->
