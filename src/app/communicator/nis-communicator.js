@@ -48,11 +48,13 @@ export default class NisCommunicator {
     });
 
     sock.emit('message', {type: 'getEvents'}, async (response) => {
+      console.log('getEvents', response);
       const ids = [];
 
       let nextSeqId = (await NisClientDbHandler.getNextSequenceID(this.deviceId)).data;
 
       _.each(response.data, (eventObj) => {
+        console.log('getEvents: ', JSON.stringify(eventObj));
         eventObj['sequence_id'] = nextSeqId;
         NisClientDbHandler.insertEntry(eventObj);
         nextSeqId++;
@@ -61,6 +63,7 @@ export default class NisCommunicator {
 
 
       sock.emit('message', {type: 'flushEvents', ids: ids}, (response) => {
+        console.log('flushEvents');
         if (response) {
           this.updateCarrier();
         }
@@ -74,12 +77,14 @@ export default class NisCommunicator {
     const sock = this.sock;
     const events = (await NisClientDbHandler.getOrderedOperations(this.otherDeiviceId, this.username)).data;
 
+    console.log(_.cloneDeep(events))
     this.preparePath(creatorPath);
 
     _.each(events, (eventObj) => {
       switch (eventObj.action) {
         case 'MODIFY':
           sock.emit('message', {type: 'requestFile', username: eventObj.user, path: eventObj.path});
+          // NisClientDbHandler.removeEvent(eventObj._id);
           break;
         case 'NEW':
           if (eventObj.type === 'dir') {
@@ -89,6 +94,7 @@ export default class NisCommunicator {
           } else if (eventObj.type === 'file') {
             sock.emit('message', {type: 'requestFile', username: eventObj.user, path: eventObj.path});
           }
+          // NisClientDbHandler.removeEvent(eventObj._id);
           break;
         case 'DELETE':
           const deletePath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.path);
@@ -101,7 +107,7 @@ export default class NisCommunicator {
               fs.unlinkSync(deletePath);
             }
           }
-
+          // NisClientDbHandler.removeEvent(eventObj._id);
           break;
         case 'RENAME':
           const oldPath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.oldPath);

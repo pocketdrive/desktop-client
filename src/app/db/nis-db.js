@@ -43,4 +43,9 @@ export default class NisClientDbHandler {
     databases.nisClientDb.insert(entry, (err) => {
     });
   }
+
+  static removeEvent(id) {
+    databases.nisClientDb.remove({_id: id}, (err, numDeleted) => {
+    });
+  }
 }
