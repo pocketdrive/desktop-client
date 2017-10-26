@@ -11,7 +11,6 @@ import {NisService} from "../providers/nis.service";
 })
 export class SyncPdPdComponent implements OnInit {
 
-  folders: NisFolder[];
   selectedFolder: NisFolder;
   deviceList: any[];
 
@@ -21,9 +20,15 @@ export class SyncPdPdComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.nisService.getNisFolderList().then((folders) => {
-      this.folders = folders;
-    });
+    this.nisService.getNisFolderList();
+  }
+
+  get folders(): NisFolder[]{
+    return this.nisService.folders;
+  }
+
+  set folders(folders: NisFolder[]) {
+    this.nisService.folders = folders;
   }
 
   okModal(): void {

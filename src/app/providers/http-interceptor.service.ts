@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Http, ConnectionBackend, RequestOptions, RequestOptionsArgs, Response, Headers, Request} from '@angular/http';
+import {ConnectionBackend, Headers, Http, RequestOptions, RequestOptionsArgs, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {LocalStorageService} from "./localstorage.service";
@@ -12,6 +12,7 @@ export class HttpInterceptor extends Http {
 
   token: string;
   baseUrl: string;
+  baseUrlWithoutPort: string;
 
   constructor(private backend: ConnectionBackend,
               private defaultOptions: RequestOptions,
@@ -110,5 +111,14 @@ export class HttpInterceptor extends Http {
     }
 
     return this.baseUrl + '/' + url;
+  }
+
+  getUrlWithoutPort(): string {
+    if (!this.baseUrlWithoutPort) {
+      let pd: PocketDrive = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
+      this.baseUrlWithoutPort = 'http://' + pd.ip;
+    }
+
+    return this.baseUrlWithoutPort;
   }
 }

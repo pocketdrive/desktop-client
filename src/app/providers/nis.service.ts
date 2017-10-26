@@ -17,6 +17,7 @@ export class NisService {
 
   private url = 'nis/';
 
+  folders: NisFolder[];
   user: User;
   remotePds: PocketDrive[];
   nisCommunicator: NisCommunicator;
@@ -78,13 +79,13 @@ export class NisService {
     }
   }
 
-  getNisFolderList(): Promise<NisFolder[]> {
+  getNisFolderList(): void {
     let message = {type: 'getNisFolders', clientId: environment.deviceId};
 
-    return this.http
+    this.http
       .post(this.url + 'list', JSON.stringify(message))
       .toPromise()
-      .then(response => response.json() as NisFolder[])
+      .then(response => this.folders= response.json())
       .catch(this.handleError);
   }
 

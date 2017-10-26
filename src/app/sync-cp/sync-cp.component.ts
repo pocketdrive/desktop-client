@@ -14,7 +14,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 
 export class SyncClientPdComponent implements OnInit {
 
-  folders: Folder[];
   allSelected: boolean;
 
   constructor(private syncService: SyncService,
@@ -27,6 +26,14 @@ export class SyncClientPdComponent implements OnInit {
     this.syncService.getSyncFolderList().then((result) => {
       this.folders = result;
     })
+  }
+
+  get folders(): Folder[] {
+    return this.syncService.folders;
+  }
+
+  set folders(folders: Folder[]) {
+    this.syncService.folders = folders;
   }
 
   // Called when select all checkbox is clicked.
