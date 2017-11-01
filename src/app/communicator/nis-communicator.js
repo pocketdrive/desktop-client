@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
-import * as fse from 'fs-extra';
+
+import {checkExistence, isFolderEmpty} from '../sync-engine/sync-actions';
 
 import {environment} from "../../environments/index";
 import NisClientDbHandler from "../db/nis-db";
@@ -51,16 +52,11 @@ export default class NisCommunicator {
       console.log('getEvents', response);
       const ids = [];
 
-      let nextSeqId = (await NisClientDbHandler.getNextSequenceID(this.deviceId)).data;
-
       _.each(response.data, (eventObj) => {
         console.log('getEvents: ', JSON.stringify(eventObj));
-        eventObj['sequence_id'] = nextSeqId;
         NisClientDbHandler.insertEntry(eventObj);
-        nextSeqId++;
         ids.push(eventObj._id);
       });
-
 
       sock.emit('message', {type: 'flushEvents', ids: ids}, (response) => {
         console.log('flushEvents');
@@ -77,7 +73,6 @@ export default class NisCommunicator {
     const sock = this.sock;
     const events = (await NisClientDbHandler.getOrderedOperations(this.otherDeiviceId, this.username)).data;
 
-    console.log(_.cloneDeep(events))
     this.preparePath(creatorPath);
 
     _.each(events, (eventObj) => {
@@ -94,27 +89,25 @@ export default class NisCommunicator {
           } else if (eventObj.type === 'file') {
             sock.emit('message', {type: 'requestFile', username: eventObj.user, path: eventObj.path});
           }
-          // NisClientDbHandler.removeEvent(eventObj._id);
           break;
-        case 'DELETE':
-          const deletePath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.path);
-
-
-          if (fs.existsSync(deletePath)) {
-            if (fs.statSync(deletePath).isDirectory()) {
-              fse.removeSync(deletePath);
-            } else {
-              fs.unlinkSync(deletePath);
-            }
-          }
-          // NisClientDbHandler.removeEvent(eventObj._id);
-          break;
-        case 'RENAME':
-          const oldPath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.oldPath);
-          const newPath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.path);
-
-          // fs.renameSync(oldPath, newPath);
-          break;
+        // case 'DELETE':
+        //   const deletePath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.path);
+        //
+        //   if (fs.existsSync(deletePath)) {
+        //     if (fs.statSync(deletePath).isDirectory()) {
+        //       fse.removeSync(deletePath);
+        //     } else {
+        //       fs.unlinkSync(deletePath);
+        //     }
+        //   }
+        //   // NisClientDbHandler.removeEvent(eventObj._id);
+        //   break;
+        // case 'RENAME':
+        //   const oldPath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.oldPath);
+        //   const newPath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.path);
+        //
+        //   // fs.renameSync(oldPath, newPath);
+        //   break;
       }
     });
 
@@ -123,25 +116,25 @@ export default class NisCommunicator {
     const conflicts = [];
 
     // Detect conflicts
-    _.each(events, (event1) => {
-      _.each(otherEvents, (event2) => {
-        // if the event corresponds to the same path and username
-        if (event1.user === event2.user && event1.path === event2.path) {
-          conflicts.push({
-            e1: event1,
-            e2: event2
-          })
-        }
-      });
-    });
+    // _.each(events, (event1) => {
+    //   _.each(otherEvents, (event2) => {
+    //     // if the event corresponds to the same path and username
+    //     if (event1.user === event2.user && event1.path === event2.path) {
+    //       conflicts.push({
+    //         e1: event1,
+    //         e2: event2
+    //       })
+    //     }
+    //   });
+    // });
 
     // For all other non-conflicting items
     _.each(otherEvents, (otherEvent) => {
-      const hasConflict = _.find(conflicts, (obj) => {
-        return obj.e2 === otherEvent;
-      });
+      // const hasConflict = _.find(conflicts, (obj) => {
+      //   return obj.e2 === otherEvent;
+      // });
 
-      if (_.isEmpty(hasConflict)) {
+      if (true) {
         switch (otherEvent.action) {
           case 'NEW':
             const newFilePath = path.join(environment.NIS_DATA_PATH, this.otherDeiviceId, this.username, otherEvent.path);
@@ -154,14 +147,20 @@ export default class NisCommunicator {
                 path: otherEvent.path,
                 username: this.username
               });
-              fs.createReadStream(newFilePath).pipe(writeStream);
-              writeStream.on('finish', () => {
-                if (fs.statSync(newFilePath).isDirectory()) {
-                  fs.rmdirSync(newFilePath);
-                } else {
+
+              if (!fs.statSync(newFilePath).isDirectory()) {
+                fs.createReadStream(newFilePath).pipe(writeStream);
+                writeStream.on('finish', () => {
                   fs.unlinkSync(newFilePath);
+                  writeStream.end();
+                });
+              } else {
+                if (checkExistence(newFilePath) && isFolderEmpty(newFilePath)) {
+                  fs.rmdirSync(newFilePath);
                 }
-              });
+              }
+
+              // TODO if the folder is empty, delete it
             }
             break;
           case 'MODIFY':
@@ -181,6 +180,7 @@ export default class NisCommunicator {
                   fs.unlinkSync(modFilePath);
                 }
               });
+              // writeStream.end(); // TODO to be tested
             }
             break;
           case 'DELETE':
