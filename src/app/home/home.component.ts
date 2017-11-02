@@ -5,6 +5,7 @@ import {LocalStorageService} from "../providers/localstorage.service";
 import {Constants} from "../constants";
 import {SyncService} from "../providers/sync.service";
 import {MountService} from "../providers/mount.service";
+import {NisService} from "../providers/nis.service";
 
 const ipc = require('electron').ipcRenderer
 
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
               private syncService: SyncService,
+              private nisService:NisService,
               private mountService: MountService) {
     HomeComponent.loadAdminLTEScripts();
   }
@@ -43,8 +45,8 @@ export class HomeComponent implements OnInit {
         this.mountService.mount();
       }
 
-      // Start Client-PD sync
-      this.syncService.startSync(); //TODO: uncomment this line
+      this.syncService.startSync();
+      this.nisService.start();
     }, 2000);
 
   }

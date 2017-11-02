@@ -55,7 +55,9 @@ export class NisService {
       .toPromise()
       .then((response) => this.afterLoadingRemotePds(response))
       .catch(this.handleError);
+  }
 
+  start(): void {
     const activeNisMaps = this.deviceMap[this.currentDeviceId];
 
     _.each(activeNisMaps, (key, deviceId) => {
@@ -66,7 +68,6 @@ export class NisService {
         nisCommunicator.requestFileHashes();
       }, 10000);
     });
-
   }
 
   afterLoadingRemotePds(response) {
@@ -85,7 +86,7 @@ export class NisService {
     this.http
       .post(this.url + 'list', JSON.stringify(message))
       .toPromise()
-      .then(response => this.folders= response.json())
+      .then(response => this.folders = response.json())
       .catch(this.handleError);
   }
 

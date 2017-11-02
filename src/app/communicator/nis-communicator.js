@@ -143,6 +143,7 @@ export default class NisCommunicator {
             if (fs.existsSync(newFilePath)) {
               const writeStream = sock.stream('file', {
                 type: 'new',
+                ignore: true,
                 fileType: newType,
                 path: otherEvent.path,
                 username: this.username
@@ -152,11 +153,13 @@ export default class NisCommunicator {
                 fs.createReadStream(newFilePath).pipe(writeStream);
                 writeStream.on('finish', () => {
                   fs.unlinkSync(newFilePath);
+                  NisClientDbHandler.removeEvent(otherEvent._id);
                   writeStream.end();
                 });
               } else {
                 if (checkExistence(newFilePath) && isFolderEmpty(newFilePath)) {
                   fs.rmdirSync(newFilePath);
+                  NisClientDbHandler.removeEvent(otherEvent._id);
                 }
               }
 
@@ -169,6 +172,7 @@ export default class NisCommunicator {
             if (fs.existsSync(modFilePath)) {
               const writeStream = sock.stream('file', {
                 type: 'update',
+                ignore: true,
                 path: otherEvent.path,
                 username: this.username
               });
@@ -176,8 +180,10 @@ export default class NisCommunicator {
               writeStream.on('finish', () => {
                 if (fs.statSync(modFilePath).isDirectory()) {
                   fs.rmdirSync(modFilePath);
+                  NisClientDbHandler.removeEvent(otherEvent._id);
                 } else {
                   fs.unlinkSync(modFilePath);
+                  NisClientDbHandler.removeEvent(otherEvent._id);
                 }
               });
               // writeStream.end(); // TODO to be tested
@@ -188,21 +194,25 @@ export default class NisCommunicator {
             // const deleteType = otherEvent.type;
             sock.emit('message', {
               type: 'delete',
+              ignore: true,
               // deleteType: deleteType,
               username: otherEvent.user,
               path: otherEvent.path
             });
+            NisClientDbHandler.removeEvent(otherEvent._id);
             break;
           case 'RENAME':
             const renameType = otherEvent.type;
 
             sock.emit('message', {
               type: 'rename',
+              ignore: true,
               username: otherEvent.user,
               renameType: renameType,
               path: otherEvent.path,
               oldPath: otherEvent.oldPath
             });
+            NisClientDbHandler.removeEvent(otherEvent._id);
             break;
         }
       }
