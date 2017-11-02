@@ -9,7 +9,7 @@ export class NisRunner {
     this.activeNisMaps = activeNisMaps;
   }
 
-  start() {
+  async start() {
     _.each(this.activeNisMaps, (key, deviceId) => {
       let nisCommunicator = new NisCommunicator(this.currentDeviceId, deviceId, this.username);
       setInterval(() => {

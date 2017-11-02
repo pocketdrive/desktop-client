@@ -17,6 +17,7 @@ export class NisService {
   private url = 'nis/';
 
   folders: NisFolder[];
+  nisRunner: NisRunner;
   user: User;
   remotePds: PocketDrive[];
   nisCommunicator: NisCommunicator;
@@ -57,7 +58,8 @@ export class NisService {
   }
 
   start(): void {
-    new NisRunner(this.currentDeviceId,this.user.username, this.deviceMap[this.currentDeviceId]).start();
+    this.nisRunner = new NisRunner(this.currentDeviceId,this.user.username, this.deviceMap[this.currentDeviceId]);
+    this.nisRunner.start();
   }
 
   afterLoadingRemotePds(response) {
