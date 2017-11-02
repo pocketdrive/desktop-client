@@ -46,32 +46,6 @@ export class SyncRunner {
     this.communicator.destroy();
   }
 
-  onClientConnect(username) {
-
-  }
-
-  onClientDisconnect(username) {
-
-  }
-
-  scanMetadataDBForChanges(username) {
-    /*MetadataDBHandler.getUpdatedFilesOfUser(username).then((updates) => {
-        _.each(updates, (update) => {
-            switch (update.action) {
-                case SyncEvents.NEW:
-                    break;
-                case SyncEvents.MODIFY:
-                    break;
-                case SyncEvents.RENAME:
-                    break;
-                case SyncEvents.DELETE:
-                    break;
-            }
-
-        })
-    })*/
-  }
-
   addNewSyncDirectory(username, folderName) {
     this.eventListeners[folderName] = new FileSystemEventListener(username, folderName, []);  // TODO: device ids
     this.eventListeners[folderName].start();

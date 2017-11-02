@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-
 import {Injectable} from '@angular/core';
 import {environment} from "environments";
 import {NisFolder} from "../models/nis-folder";
@@ -9,6 +7,7 @@ import {User} from "../models/user";
 import {LocalStorageService} from "./localstorage.service";
 import {Constants} from "../constants";
 import {PocketDrive} from "../models/pocketdrive";
+import {NisRunner} from '../sync-engine/nis-runner';
 
 import NisCommunicator from '../communicator/nis-communicator';
 
@@ -58,16 +57,7 @@ export class NisService {
   }
 
   start(): void {
-    const activeNisMaps = this.deviceMap[this.currentDeviceId];
-
-    _.each(activeNisMaps, (key, deviceId) => {
-      let nisCommunicator = new NisCommunicator(this.currentDeviceId, deviceId, this.user.username);
-      setInterval(() => {
-        console.log(`[NIS][${this.currentDeviceId} --> ${deviceId}]`);
-
-        nisCommunicator.requestFileHashes();
-      }, 10000);
-    });
+    new NisRunner(this.currentDeviceId,this.user.username, this.deviceMap[this.currentDeviceId]).start();
   }
 
   afterLoadingRemotePds(response) {

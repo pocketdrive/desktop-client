@@ -49,17 +49,14 @@ export default class NisCommunicator {
     });
 
     sock.emit('message', {type: 'getEvents'}, async (response) => {
-      console.log('getEvents', response);
       const ids = [];
 
       _.each(response.data, (eventObj) => {
-        console.log('getEvents: ', JSON.stringify(eventObj));
         NisClientDbHandler.insertEntry(eventObj);
         ids.push(eventObj._id);
       });
 
       sock.emit('message', {type: 'flushEvents', ids: ids}, (response) => {
-        console.log('flushEvents');
         if (response) {
           this.updateCarrier();
         }
