@@ -1,4 +1,5 @@
-import {app, BrowserWindow, screen} from 'electron';
+import {app, BrowserWindow, Menu, screen, shell, Tray} from 'electron';
+
 const path = require('path');
 
 const ipc = require('electron').ipcMain;
@@ -6,7 +7,7 @@ const dialog = require('electron').dialog;
 
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-let mainWindow, serve;
+let mainWindow, serve, tray;
 const args = process.argv.slice(1);
 serve = args.some(val => val === "--serve");
 
@@ -34,47 +35,32 @@ function createWindow() {
   }
 
   mainWindow.on('closed', () => {
-    /*
-    Dereference the window object, usually you would store window
-    in an array if your app supports multi windows, this is the time
-    when you should delete the corresponding element.
-    */
     mainWindow = null;
   });
 
-  /*mainWindow.on('minimize', function (event) {
-    event.preventDefault()
+  mainWindow.on('minimize', (event) => {
+    event.preventDefault();
     mainWindow.hide();
   });
 
+  tray = new Tray(path.join(__dirname, '../src/assets/tray-icon.png'));
 
-  mainWindow.on('close', function (event) {
-    // if (!app.isQuiting) {
-    event.preventDefault()
-    mainWindow.hide();
-    // }
-    return false;
-  });
+  let pdPath = app.getPath('music');
+  let foldersOnPath = pdPath.split('/');
+  foldersOnPath[foldersOnPath.length - 1] = 'PocketDrive';
+  pdPath = foldersOnPath.join('/');
+  pdPath += 'home-pd';
 
-  let contextMenu = Menu.buildFromTemplate([
+  console.log(pdPath);
 
-    {
-      label: 'Show App', click: function () {
-      mainWindow.show();
-    }
-    },
-    {
-      label: 'Quit', click: function () {
-      // app.isQuiting = true;
-      app.quit();
-
-    }
-    }
+  const contextMenu = Menu.buildFromTemplate([
+    {label: 'Open PocketDrive Folder', type: 'normal', click: () => shell.showItemInFolder(pdPath)},
+    {label: 'Show PocketDrive App', type: 'normal', click: () => mainWindow.show()},
+    {label: 'Quit', type: 'normal', click: () => app.quit()},
   ]);
 
-  let appIcon = new Tray(path.join(__dirname, '../src/assets/tray-icon.png'));
-  // appIcon.setToolTip('Electron.js App');
-  appIcon.setContextMenu(contextMenu);*/
+  tray.setToolTip('This is my application.');
+  tray.setContextMenu(contextMenu);
 
 }
 
