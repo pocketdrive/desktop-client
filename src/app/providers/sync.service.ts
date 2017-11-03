@@ -56,6 +56,8 @@ export class SyncService {
       .toPromise()
       .then((response) => response.json())
       .catch(this.handleError);
+
+    this.syncRunner.refreshSyncDirectories();
   }
 
   private handleError(error: any): void {

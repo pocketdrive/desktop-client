@@ -64,7 +64,6 @@ export class SelectpdComponent implements OnInit {
   getSanitizedName(name: string): string {
     let sanitizedName = _.toLower(name);
     sanitizedName = _.join(_.split(sanitizedName, ' '), '-');
-    console.log('sanitizedName: ', sanitizedName);
     return sanitizedName;
   }
 

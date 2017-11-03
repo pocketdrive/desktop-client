@@ -1,10 +1,13 @@
+import path from 'path';
 import * as _ from 'lodash';
+import mkdirp from 'mkdirp';
 
 import FileSystemEventListener from './file-system-event-listener';
 import {LocalStorageService} from "../providers/localstorage.service";
 import {Constants} from "../constants";
 import {SyncCommunicator} from '../communicator/sync-communicator';
 import MetadataDBHandler from "../db/file-metadata-db";
+import {environment} from "../../environments/index";
 
 /**
  * @author Dulaj Atapattu
@@ -46,7 +49,21 @@ export class SyncRunner {
     this.communicator.destroy();
   }
 
+  refreshSyncDirectories() {
+    _.each(this.eventListeners, (folderName, listener) => {
+      listener.stop(); // TODO: Here listener is not stopping
+    });
+
+    let syncFolders = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.syncFolders));
+
+    _.each(syncFolders, (folder) => {
+      this.addNewSyncDirectory(this.username, folder.name);
+    });
+
+  }
+
   addNewSyncDirectory(username, folderName) {
+    mkdirp.sync(path.resolve(environment.PD_FOLDER_PATH, folderName));
     this.eventListeners[folderName] = new FileSystemEventListener(username, folderName, []);  // TODO: device ids
     this.eventListeners[folderName].start();
   }
