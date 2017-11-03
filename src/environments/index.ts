@@ -10,9 +10,9 @@ export const environment = {
   USER_HOME_OF_CLIENT:'/home/dulaj',
 
   // PD_FOLDER_PATH: '',
-  // NIS_DATA_PATH: '',
+  NIS_DATA_PATH: '/home/dulaj/.PocketDrive/nis-data',
 
-  NE_DB_PATH_CHECKSUM: '/home/dulaj/.PocketDrive/home-pd/checksum.db',
-  NE_DB_PATH_SYNC_METADATA: '/home/dulaj/.PocketDrive/home-pd/sync_metadata.db',
-  NE_DB_PATH_NIS_METADATA: '/home/dulaj/.PocketDrive/home-pd/nis_metadata.db'
+  // NE_DB_PATH_CHECKSUM: '/home/dulaj/.PocketDrive/home-pd/checksum.db',
+  // NE_DB_PATH_SYNC_METADATA: '/home/dulaj/.PocketDrive/home-pd/sync_metadata.db',
+  NE_DB_PATH_NIS_METADATA: '/home/dulaj/.PocketDrive/nis_metadata.db'
 };
