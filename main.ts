@@ -45,13 +45,7 @@ function createWindow() {
 
   tray = new Tray(path.join(__dirname, '../src/assets/tray-icon.png'));
 
-  let pdPath = app.getPath('music');
-  let foldersOnPath = pdPath.split('/');
-  foldersOnPath[foldersOnPath.length - 1] = 'PocketDrive';
-  pdPath = foldersOnPath.join('/');
-  pdPath += 'home-pd';
-
-  console.log(pdPath);
+  let pdPath = path.resolve(app.getPath('home'), 'PocketDrive', ' ');
 
   const contextMenu = Menu.buildFromTemplate([
     {label: 'Open PocketDrive Folder', type: 'normal', click: () => shell.showItemInFolder(pdPath)},
