@@ -1,3 +1,6 @@
+import path from 'path';
+import * as _ from 'lodash';
+
 import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 
@@ -6,6 +9,7 @@ import {PocketDriveService} from "../providers/pd.service";
 import {LocalStorageService} from "../providers/localstorage.service";
 import {Router} from "@angular/router";
 import {Constants} from "../constants";
+import {environment} from "environments";
 
 @Component({
   selector: 'app-selectpd',
@@ -41,7 +45,25 @@ export class SelectpdComponent implements OnInit {
     // console.log(pd);
     LocalStorageService.setItem(Constants.localStorageKeys.selectedPd, JSON.stringify(pd));
     LocalStorageService.setItem(Constants.localStorageKeys.networkType, JSON.stringify(Constants.networkTypes.local));
+
+    const currentPd: PocketDrive = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
+
+    environment['PD_FOLDER_PATH'] = path.resolve(environment.USER_HOME_OF_CLIENT, 'PocketDrive', this.getSanitizedName(currentPd.name)) + path.sep;
+    environment['NIS_DATA_PATH'] = path.resolve(environment.USER_HOME_OF_CLIENT, '.PocketDrive', this.getSanitizedName(currentPd.name), 'nis-data') + path.sep;
+
     this.router.navigate(['signin']);
+  }
+
+  /**
+   * Returns dash(-) separated name
+   *
+   * @returns {string} Dash(-) separated name
+   */
+  getSanitizedName(name: string): string {
+    let sanitizedName = _.toLower(name);
+    sanitizedName = _.join(_.split(sanitizedName, ' '), '-');
+    console.log('sanitizedName: ', sanitizedName);
+    return sanitizedName;
   }
 
 }

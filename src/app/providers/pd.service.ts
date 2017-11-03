@@ -41,7 +41,6 @@ export class PocketDriveService {
     let client = new Ssdp();
     let self = this;
     this.localPDs = [];
-    this.remotePDs = [];
 
     client.on('response', (msg) => {
       let headers = _.split(msg, '\n');

@@ -117,6 +117,8 @@ export default class FileSystemEventListener {
       for (let i = 0; i < change.addedFolders.length; i++) {
         console.log("Watcher [DIR][NEW] ", change.addedFolders[i]);
 
+        console.log('PD_FOLDER_PATH: ', change.addedFolders[i], this.pdPath);
+
         MetadataDBHandler.insertEntry({
           action: SyncEvents.NEW,
           user: this.username,
