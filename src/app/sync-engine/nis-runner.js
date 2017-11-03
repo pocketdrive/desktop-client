@@ -3,7 +3,6 @@ import NisCommunicator from "../communicator/nis-communicator";
 export class NisRunner {
 
   constructor(currentDeviceId, username, activeNisMaps) {
-    console.log(currentDeviceId, username, activeNisMaps) ;
     this.currentDeviceId = currentDeviceId;
     this.username = username;
     this.activeNisMaps = activeNisMaps;
