@@ -2,6 +2,7 @@ import {Socket} from 'fast-tcp';
 import * as _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
+import fse from 'fs-extra';
 import mkdirp from 'mkdirp';
 
 import {checkExistence} from '../sync-engine/sync-actions';
@@ -147,15 +148,19 @@ export default class NisCommunicator {
               fs.createReadStream(newFilePath).pipe(writeStream);
 
               writeStream.on('finish', () => {
-                fs.unlinkSync(newFilePath);
-                NisClientDbHandler.removeEvent(event._id);
+                if (fs.existsSync(newFilePath)) {
+                  fs.unlinkSync(newFilePath);
+                  writeStream.end();
+                }
               });
 
             } else {
               foldersToDelete.push(newFilePath);
-              NisClientDbHandler.removeEvent(event._id);
             }
           }
+
+          NisClientDbHandler.removeEvent(event._id);
+
           break;
 
         case 'MODIFY':
@@ -172,10 +177,14 @@ export default class NisCommunicator {
             fs.createReadStream(modFilePath).pipe(writeStream);
 
             writeStream.on('finish', () => {
-              fs.unlinkSync(modFilePath);
-              NisClientDbHandler.removeEvent(event._id);
+              if (fs.existsSync(modFilePath)) {
+                fs.unlinkSync(modFilePath);
+                writeStream.end();
+              }
             });
           }
+
+          NisClientDbHandler.removeEvent(event._id);
           break;
 
         case 'DELETE':
@@ -206,7 +215,8 @@ export default class NisCommunicator {
 
     _.each(foldersToDelete, (folderPath) => {
       if (checkExistence(folderPath)) {
-        fs.rmdirSync(folderPath);
+        fse.removeSync(folderPath);
+        console.log('folder deleted', folderPath);
       }
     });
 
