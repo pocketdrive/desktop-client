@@ -36,10 +36,10 @@ export default class NisCommunicator {
     this.sock.on('callBack', (response) => {
       switch (response.type) {
         case 'getEvents':
-          console.log('onResposne', response);
           const ids = [];
 
           _.each(response.data, (eventObj) => {
+            console.log('[EVENT_FROM_PD]', eventObj.path);
             eventObj.fileFetched = false;
             NisClientDbHandler.upsertEntry(eventObj);
             ids.push(eventObj._id);
@@ -65,8 +65,6 @@ export default class NisCommunicator {
 
   requestFileHashes() {
     const sock = this.sock;
-
-    console.log('requestFileHashes');
 
     // Get the events from the pd.
     sock.emit('message', {
@@ -97,6 +95,32 @@ export default class NisCommunicator {
           } else if (eventObj.type === 'file') {
             sock.emit('message', {type: 'requestFile', username: eventObj.user, path: eventObj.path});
           }
+          break;
+
+        case 'RENAME':
+          const oldPath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.oldPath);
+          const newPath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.path);
+
+          if (fs.existsSync(oldPath)) {
+            fs.renameSync(oldPath, newPath);
+            eventObj.action = 'MODIFY';
+            delete eventObj.oldPath;
+            NisClientDbHandler.upsertEntry(eventObj);
+          }
+
+          break;
+
+        case 'DELETE':
+          const fullPath = path.join(environment.NIS_DATA_PATH, this.deviceId, eventObj.user, eventObj.path);
+
+          if (fs.existsSync(fullPath)) {
+            if (fs.statSync(fullPath).isDirectory()) {
+              fse.removeSync(fullPath);
+            } else {
+              fs.unlinkSync(fullPath);
+            }
+          }
+
           break;
       }
 
@@ -140,6 +164,7 @@ export default class NisCommunicator {
     const foldersToDelete = [];
 
     _.each(eventsFromCarrier, (event) => {
+      console.log('[EVENT_FROM_CARRIER]', event.path);
       switch (event.action) {
         case 'NEW':
           const newFilePath = path.join(environment.NIS_DATA_PATH, this.otherDeiviceId, this.username, event.path);
