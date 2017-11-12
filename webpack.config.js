@@ -199,6 +199,8 @@ module.exports = {
     "node-ssdp-lite": "require('node-ssdp-lite')",
     "fast-tcp": "require('fast-tcp')",
     "socket.io": "require('socket.io')",
+    "socket.io-client": "require('socket.io-client')",
+    "socket.io-stream": "require('socket.io-stream')",
     "stream-to-buffer": "require('stream-to-buffer')",
     "node-cmd": "require('node-cmd')",
     "rabin": "require('rabin')",

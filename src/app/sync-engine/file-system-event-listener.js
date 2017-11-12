@@ -31,8 +31,6 @@ export default class FileSystemEventListener {
     this.data = {};
     this.changes = [];
     this.serializeLock = 0;
-
-    console.log('sequenceID', FileSystemEventListener.sequenceID);
   }
 
   start() {

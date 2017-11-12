@@ -1,4 +1,6 @@
-import {Socket} from 'fast-tcp';
+const io = require('socket.io-client');
+const ss = require('socket.io-stream');
+
 import * as _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
@@ -23,27 +25,41 @@ export default class NisCommunicator {
     this.username = username;
     this.ip = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).ip;
 
-    this.sock = new Socket({
-      host: this.ip,
-      port: 5001
+    this.sock = io(`http://${this.ip}:5001`);
+
+    ss(this.sock).on('file', (readStream, json) => {
+      const filePath = path.join(environment.NIS_DATA_PATH, this.deviceId, json.username, json.path);
+      this.preparePath(path.dirname(filePath));
+      readStream.pipe(fs.createWriteStream(filePath));
     });
 
-    this.sock.on('file', (readStream, json) => {
-      const filepath = path.join(environment.NIS_DATA_PATH, this.deviceId, json.username, json.path);
-      this.preparePath(path.dirname(filepath));
-      const writeStream = fs.createWriteStream(filepath);
-      readStream.pipe(writeStream);
+    this.sock.on('callBack', (response) => {
+      switch (response.type) {
+        case 'getEvents':
+          console.log('onResposne', response);
+          const ids = [];
+
+          _.each(response.data, (eventObj) => {
+            NisClientDbHandler.insertEntry(eventObj);
+            ids.push(eventObj._id);
+          });
+
+          this.sock.emit('message', {type: 'flushEvents', ids: ids});
+          break;
+
+        case 'flushEvents':
+          if (response.data) {
+            this.updateCarrier();
+          }
+          break;
+      }
     });
 
   }
 
   reconnect() {
     this.sock.destroy();
-
-    this.sock = new Socket({
-      host: this.ip,
-      port: 5001
-    });
+    this.sock = io(`http://${this.ip}:5001`);
   }
 
   requestFileHashes() {
@@ -56,20 +72,6 @@ export default class NisCommunicator {
       type: 'getEvents',
       username: this.username,
       otherDeviceID: this.otherDeiviceId
-    }, (response) => {
-      console.log('onResposne');
-      const ids = [];
-
-      _.each(response.data, (eventObj) => {
-        NisClientDbHandler.insertEntry(eventObj);
-        ids.push(eventObj._id);
-      });
-
-      sock.emit('message', {type: 'flushEvents', ids: ids}, (response) => {
-        if (response) {
-          this.updateCarrier();
-        }
-      });
     });
   }
 
@@ -140,19 +142,17 @@ export default class NisCommunicator {
 
           if (fs.existsSync(newFilePath)) {
             if (!fs.statSync(newFilePath).isDirectory()) {
-              const writeStream = sock.stream('file', {
+              const writeStream = ss.createStream();
+              ss(sock).emit('file', writeStream, {
                 type: 'new',
                 ignore: true,
                 fileType: event.type, // dir or file
                 path: event.path,
                 username: this.username
               });
-
               fs.createReadStream(newFilePath).pipe(writeStream);
 
               writeStream.on('finish', () => {
-                writeStream.end();
-
                 if (fs.existsSync(newFilePath)) {
                   fs.unlinkSync(newFilePath);
                 }
@@ -171,18 +171,16 @@ export default class NisCommunicator {
           const modFilePath = path.join(environment.NIS_DATA_PATH, this.otherDeiviceId, this.username, event.path);
 
           if (fs.existsSync(modFilePath)) {
-            const writeStream = sock.stream('file', {
+            const writeStream = ss.createStream();
+            ss(sock).emit('file', writeStream, {
               type: 'update',
               ignore: true,
               path: event.path,
               username: this.username
             });
-
             fs.createReadStream(modFilePath).pipe(writeStream);
 
             writeStream.on('finish', () => {
-              writeStream.end();
-
               if (fs.existsSync(modFilePath)) {
                 fs.unlinkSync(modFilePath);
               }

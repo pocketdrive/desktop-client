@@ -63,7 +63,6 @@ export class SyncRunner {
   }
 
   addNewSyncDirectory(username, folderName) {
-    console.log(path.resolve(environment.PD_FOLDER_PATH, folderName));
     mkdirp.sync(path.resolve(environment.PD_FOLDER_PATH, folderName));
     this.eventListeners[folderName] = new FileSystemEventListener(username, folderName, []);  // TODO: device ids
     this.eventListeners[folderName].start();
