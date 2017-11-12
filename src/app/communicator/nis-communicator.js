@@ -49,12 +49,15 @@ export default class NisCommunicator {
   requestFileHashes() {
     const sock = this.sock;
 
+    console.log('requestFileHashes');
+
     // Get the events from the pd.
     sock.emit('message', {
       type: 'getEvents',
       username: this.username,
       otherDeviceID: this.otherDeiviceId
-    }, async (response) => {
+    }, (response) => {
+      console.log('onResposne');
       const ids = [];
 
       _.each(response.data, (eventObj) => {
@@ -148,9 +151,10 @@ export default class NisCommunicator {
               fs.createReadStream(newFilePath).pipe(writeStream);
 
               writeStream.on('finish', () => {
+                writeStream.end();
+
                 if (fs.existsSync(newFilePath)) {
                   fs.unlinkSync(newFilePath);
-                  writeStream.end();
                 }
               });
 
@@ -177,9 +181,10 @@ export default class NisCommunicator {
             fs.createReadStream(modFilePath).pipe(writeStream);
 
             writeStream.on('finish', () => {
+              writeStream.end();
+
               if (fs.existsSync(modFilePath)) {
                 fs.unlinkSync(modFilePath);
-                writeStream.end();
               }
             });
           }
@@ -216,7 +221,6 @@ export default class NisCommunicator {
     _.each(foldersToDelete, (folderPath) => {
       if (checkExistence(folderPath)) {
         fse.removeSync(folderPath);
-        console.log('folder deleted', folderPath);
       }
     });
 
