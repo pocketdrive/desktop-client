@@ -6,6 +6,7 @@ import {Constants} from "../constants";
 import {SyncService} from "../providers/sync.service";
 import {MountService} from "../providers/mount.service";
 import {NisService} from "../providers/nis.service";
+import {PocketDrive} from "../models/pocketdrive";
 
 const ipc = require('electron').ipcRenderer
 
@@ -18,6 +19,7 @@ export class HomeComponent implements OnInit {
 
   user: User;
   count: number = 0;
+  pocketDrive: PocketDrive;
 
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
@@ -25,6 +27,7 @@ export class HomeComponent implements OnInit {
               private nisService:NisService,
               private mountService: MountService) {
     HomeComponent.loadAdminLTEScripts();
+    this.pocketDrive = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
   }
 
   ngOnInit() {
