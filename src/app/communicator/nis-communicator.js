@@ -58,11 +58,6 @@ export default class NisCommunicator {
 
   }
 
-  /*reconnect() {
-    this.sock.destroy();
-    this.sock = io(`http://${this.ip}:5001`);
-  }*/
-
   requestFileHashes() {
     const sock = this.sock;
 
