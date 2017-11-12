@@ -11,7 +11,7 @@ const sudo = require('sudo-prompt');
 
 const options = {
   name: 'Pocket Drive',
-  icns: '/Applications/Electron.app/Contents/Resources/Electron.icns',
+  icns: '~/.PocketDrive/sudo-prompt.icns'
 };
 
 @Injectable()
