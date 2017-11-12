@@ -40,7 +40,8 @@ export default class NisCommunicator {
           const ids = [];
 
           _.each(response.data, (eventObj) => {
-            NisClientDbHandler.insertEntry(eventObj);
+            eventObj.fileFetched = false;
+            NisClientDbHandler.upsertEntry(eventObj);
             ids.push(eventObj._id);
           });
 
@@ -57,10 +58,10 @@ export default class NisCommunicator {
 
   }
 
-  reconnect() {
+  /*reconnect() {
     this.sock.destroy();
     this.sock = io(`http://${this.ip}:5001`);
-  }
+  }*/
 
   requestFileHashes() {
     const sock = this.sock;
@@ -78,7 +79,7 @@ export default class NisCommunicator {
   async updateCarrier() {
     const creatorPath = path.join(environment.NIS_DATA_PATH, this.deviceId, this.username);
     const sock = this.sock;
-    const eventsFromPd = (await NisClientDbHandler.getOrderedOperations(this.otherDeiviceId, this.username)).data;
+    const eventsFromPd = (await NisClientDbHandler.getOrderedOperations(this.otherDeiviceId, this.username, false)).data;
 
     this.preparePath(creatorPath);
 
@@ -98,6 +99,9 @@ export default class NisCommunicator {
           }
           break;
       }
+
+      eventObj.fileFetched = true;
+      NisClientDbHandler.upsertEntry(eventObj);
     });
 
     /*const conflicts = [];
@@ -132,7 +136,7 @@ export default class NisCommunicator {
     });*/
 
     // Get the events from the carrier
-    const eventsFromCarrier = (await NisClientDbHandler.getOrderedOperations(this.deviceId, this.username)).data;
+    const eventsFromCarrier = (await NisClientDbHandler.getOrderedOperations(this.deviceId, this.username, true)).data;
     const foldersToDelete = [];
 
     _.each(eventsFromCarrier, (event) => {

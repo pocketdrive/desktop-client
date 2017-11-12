@@ -22,14 +22,14 @@ export default class NisClientDbHandler {
     });
   }
 
-  static getOrderedOperations(otherDeviceId, username) {
+  static getOrderedOperations(otherDeviceId, username, fileFetched) {
     let result = {success: false};
 
     return new Promise((resolve) => {
       databases.nisClientDb.find({
         otherDeviceID: otherDeviceId,
         user: username,
-        synced: false
+        fileFetched: fileFetched
       }).sort({sequence_id: 1}).exec((err, docs) => {
         if (err) {
           this.handleError(result, 'DB Error. Cannot get max sequenceID', err);
@@ -49,11 +49,7 @@ export default class NisClientDbHandler {
         user: entry.user,
         otherDeviceID: entry.otherDeviceID,
         path: entry.path
-      },
-      entry,
-      {upsert: true},
-      (err) => {
-        console.error('Error while inserting nis-metadata entry', err);
+      }, entry, {upsert: true}, () => {
       });
   }
 
