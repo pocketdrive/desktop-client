@@ -26,7 +26,11 @@ export default class NisClientDbHandler {
     let result = {success: false};
 
     return new Promise((resolve) => {
-      databases.nisClientDb.find({otherDeviceID: otherDeviceId, user: username}).sort({sequence_id: 1}).exec((err, docs) => {
+      databases.nisClientDb.find({
+        otherDeviceID: otherDeviceId,
+        user: username,
+        synced: false
+      }).sort({sequence_id: 1}).exec((err, docs) => {
         if (err) {
           this.handleError(result, 'DB Error. Cannot get max sequenceID', err);
         } else {
@@ -39,9 +43,18 @@ export default class NisClientDbHandler {
     });
   }
 
-  static insertEntry(entry) {
-    databases.nisClientDb.insert(entry, (err) => {
-    });
+  static upsertEntry(entry) {
+    databases.nisClientDb.update(
+      {
+        user: entry.user,
+        otherDeviceID: entry.otherDeviceID,
+        path: entry.path
+      },
+      entry,
+      {upsert: true},
+      (err) => {
+        console.error('Error while inserting nis-metadata entry', err);
+      });
   }
 
   static removeEvent(id) {
