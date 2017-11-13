@@ -16,7 +16,7 @@ export class SyncRunner {
 
   constructor() {
     this.serializeLock = 0;
-    this.eventListeners = [];
+    this.eventListeners = {};
     this.username = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser)).username;
     this.ip = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).ip;
   }
@@ -50,17 +50,17 @@ export class SyncRunner {
   }
 
   refreshSyncDirectories() {
-    console.log(this.eventListeners);
-    _.each(this.eventListeners, (listener, folderName) => {
-      listener.stop(); // TODO: Here listener is not stopping
+    _.each(this.eventListeners, (listener) => {
+      listener.stop();
     });
+
+    this.eventListeners = {};
 
     let syncFolders = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.syncFolders));
 
     _.each(syncFolders, (folder) => {
       this.addNewSyncDirectory(this.username, folder.name);
     });
-
   }
 
   addNewSyncDirectory(username, folderName) {
