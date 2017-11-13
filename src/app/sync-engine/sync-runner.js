@@ -1,13 +1,8 @@
-import path from 'path';
-import * as _ from 'lodash';
-import mkdirp from 'mkdirp';
-
 import FileSystemEventListener from './file-system-event-listener';
 import {LocalStorageService} from "../providers/localstorage.service";
 import {Constants} from "../constants";
 import {SyncCommunicator} from '../communicator/sync-communicator';
 import MetadataDBHandler from "../db/file-metadata-db";
-import {environment} from "../../environments/index";
 
 /**
  * @author Dulaj Atapattu
@@ -19,6 +14,7 @@ export class SyncRunner {
     // this.eventListeners = {};
     this.username = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser)).username;
     this.ip = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).ip;
+    this.communicator = new SyncCommunicator(this.username, this.ip);
   }
 
   async startSync() {
@@ -30,11 +26,6 @@ export class SyncRunner {
     this.fileWatcher = new FileSystemEventListener(this.username, "", []);  // TODO: device ids
     this.fileWatcher.start();
 
-    /*_.each(syncFolders, (folder) => {
-      this.addNewSyncDirectory(this.username, folder.name);
-    });*/
-
-
     this.syncInervalId = setInterval(() => {
       if (this.serializeLock === 0 && !FileSystemEventListener.isWatcherRunning) {
         this.doSync();
@@ -44,41 +35,10 @@ export class SyncRunner {
   }
 
   stopSync() {
-    /*_.each(this.eventListeners, (listener) => {
-      listener.stop();
-    });*/
-
     this.fileWatcher.stop();
     clearTimeout(this.syncInervalId);
-    this.communicator.destroy();
+    this.communicator.closeSocket();
   }
-
-  /*refreshSyncDirectories() {
-    console.log('Restarting sync engine');
-
-    _.each(this.eventListeners, (listener) => {
-      listener.stop();
-    });
-
-    this.eventListeners = {};
-
-    let syncFolders = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.syncFolders));
-
-    _.each(syncFolders, (folder) => {
-      this.addNewSyncDirectory(this.username, folder.name);
-    });
-  }
-
-  addNewSyncDirectory(username, folderName) {
-    mkdirp.sync(path.resolve(environment.PD_FOLDER_PATH, folderName));
-    this.eventListeners[folderName] = new FileSystemEventListener(username, folderName, []);  // TODO: device ids
-    this.eventListeners[folderName].start();
-  }
-
-  removeSyncDirectory(folder) {
-    this.eventListeners[folder].stop();
-    delete this.eventListeners[folder];
-  }*/
 
   async doSync() {
     console.log('[SYNC][CLIENT_TO_SERVER]');
@@ -87,51 +47,26 @@ export class SyncRunner {
     await MetadataDBHandler.getChanges().then(async (changes) => {
       changes = changes.data;
       let i = 0;
-      let tryCount = 0;
 
       const intervalId = setInterval(async () => {
-          if (!this.communicator.serverSyncCalled) {
-            if (this.communicator.serializeLock === 0) {
-              tryCount = 0;
-              if (i < changes.length) {
-                await this.communicator.sendSyncRequest(changes[i++]);
-              }
-              else {
-                // console.log('[SYNC][SERVER_TO_CLIENT]');
-                await this.communicator.requestServerToClientSync();
-              }
-            }
-
-            else if (tryCount === 5) {
-              this.communicator.serializeLock = 0;
-              this.communicator.openSocket();
-              setTimeout(() => {
-                this.communicator.closeSocket(); // TODO: Have to wait until bigger files are sent completely.
-              }, 20000);
-              i--;
-              tryCount = 0;
+        if (!this.communicator.serverSyncCalled) {
+          if (this.communicator.serializeLock === 0) {
+            if (i < changes.length) {
+              await this.communicator.sendSyncRequest(changes[i++]);
             }
             else {
-              tryCount++;
-              console.log('Retrying to sync: ', tryCount);
+              // console.log('[SYNC][SERVER_TO_CLIENT]');
+              await this.communicator.requestServerToClientSync();
             }
           }
-          else if (this.communicator.serializeLock === 0) {
-            clearInterval(intervalId);
-            this.communicator.serverSyncCalled = false;
-            this.serializeLock--;
-          }
-
         }
-        ,
-        500
-      );
-
+        else if (this.communicator.serializeLock === 0) {
+          clearInterval(intervalId);
+          this.communicator.serverSyncCalled = false;
+          this.serializeLock--;
+        }
+      }, 500);
     });
-  }
-
-  sleep(milliSeconds) {
-    return new Promise(resolve => setTimeout(resolve, milliSeconds));
   }
 
 }

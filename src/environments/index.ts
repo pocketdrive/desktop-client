@@ -4,7 +4,6 @@
 export const environment = {
   production: false,
   deviceId: '76e3d74e-5610-4b06-9203-7c7b32dbeb69',
-  syncPort: 5000,
   centralServer: "http://45.55.94.191:8080",
 
   USER_HOME_OF_CLIENT:'/home/dulaj',
