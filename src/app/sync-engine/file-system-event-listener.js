@@ -44,7 +44,7 @@ export default class FileSystemEventListener {
       }
     });
 
-    console.log('Add watch ', this.baseDirectory);
+    console.log('Watch ', this.baseDirectory);
 
     this.monitor.on('change', async (change) => {
       this.changes.push(change);
@@ -208,6 +208,7 @@ export default class FileSystemEventListener {
   }
 
   stop() {
-    // TODO: Unregister watcher
+    this.monitor.close();
+    console.log('Unwatch ', this.baseDirectory);
   }
 }
