@@ -20,6 +20,7 @@ export default class FileSystemEventListener {
 
   constructor(username, folder, deviceIDs) {
     FileSystemEventListener.isWatcherRunning = false;
+    FileSystemEventListener.ignoreEvents = [];
 
     this.pdPath = environment.PD_FOLDER_PATH;
     this.username = username;
@@ -32,6 +33,12 @@ export default class FileSystemEventListener {
     this.data = {};
     this.changes = [];
     this.serializeLock = 0;
+  }
+
+  shouldIgnore(path) {
+    return _.findIndex(FileSystemEventListener.ignoreEvents, (obj) => {
+      return obj === path;
+    }) !== -1;
   }
 
   start() {
@@ -56,7 +63,7 @@ export default class FileSystemEventListener {
     });
   }
 
-  stop(){
+  stop() {
     console.log('Remove watch ', this.baseDirectory);
     this.monitor.close();
   }
@@ -71,6 +78,22 @@ export default class FileSystemEventListener {
       _.each(changeList, (relativePath, index) => {
         change[changeListName][index] = path.join(this.baseDirectory, relativePath);
       });
+    });
+
+    // Ignore files which are being synced now
+    _.each(change, (changeList, changeListName) => {
+      let removables = [];
+      _.each(changeList, (fullPath, index) => {
+        if (this.shouldIgnore(fullPath)) {
+          removables.push(index);
+        }
+      });
+
+      removables = _.reverse(removables);
+
+      _.each(removables, (index) => {
+        change[changeListName].splice(index, 1);
+      })
     });
 
     if (change.addedFolders.length > 0 && change.addedFolders.length === change.removedFolders.length) {
