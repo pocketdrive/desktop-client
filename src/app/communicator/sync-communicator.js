@@ -1,25 +1,27 @@
-import {Socket, Server} from 'fast-tcp';
+import {Server, Socket} from 'fast-tcp';
 import path from 'path';
 import fs from 'fs';
 import streamToBuffer from 'stream-to-buffer';
 import stream from 'stream';
 import * as _ from 'lodash';
 
-import {SyncMessages, SyncActions, SyncActionMessages, SyncEvents} from '../sync-engine/sync-constants';
+import {SyncActionMessages, SyncActions, SyncEvents, SyncMessages} from '../sync-engine/sync-constants';
 import * as syncActions from '../sync-engine/sync-actions';
-import {modifyExistingFile} from "../sync-engine/sync-actions";
-import {createOrModifyFile} from "../sync-engine/sync-actions";
-import {getFileChecksum} from "../sync-engine/sync-actions";
-import {afterSyncFile} from "../sync-engine/sync-actions";
+import {
+  afterSyncFile,
+  checkExistence,
+  createOrModifyFile,
+  deleteMetadataEntry,
+  getFileChecksum,
+  getFolderChecksum,
+  getSyncedChecksum,
+  isFolderEmpty,
+  modifyExistingFile,
+  setSyncedChecksum
+} from '../sync-engine/sync-actions';
 import {ChunkBasedSynchronizer} from "../sync-engine/chunk-based-synchronizer";
-import {deleteMetadataEntry} from "../sync-engine/sync-actions";
-import {setSyncedChecksum} from "../sync-engine/sync-actions";
 import {getCheckSum} from "../sync-engine/meta-data";
-import {getSyncedChecksum} from "../sync-engine/sync-actions";
 import {CommonUtils} from "../sync-engine/common";
-import {checkExistence} from "../sync-engine/sync-actions";
-import {isFolderEmpty} from "../sync-engine/sync-actions";
-import {getFolderChecksum} from "../sync-engine/sync-actions";
 import {environment} from "../../environments/index";
 
 /**
@@ -45,6 +47,7 @@ export class SyncCommunicator {
   }
 
   openSocket() {
+    console.log('Opening sync socket');
     this.socket = new Socket({
       host: this.clientIP,
       port: this.clientPort
