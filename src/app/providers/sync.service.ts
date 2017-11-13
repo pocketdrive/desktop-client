@@ -4,11 +4,10 @@ import {HttpInterceptor} from "./http-interceptor.service";
 import {environment} from "environments";
 import {LocalStorageService} from "./localstorage.service";
 import {Constants} from "../constants";
+import {SyncRunner} from '../sync-engine/sync-runner';
 
 const _ = require('lodash');
 const uuid = require('uuid/v4');
-
-import {SyncRunner} from '../sync-engine/sync-runner';
 
 @Injectable()
 export class SyncService {
@@ -19,6 +18,10 @@ export class SyncService {
   syncRunner: SyncRunner;
 
   constructor(private http: HttpInterceptor) {
+    // this.init();
+  }
+
+  init(): void {
     this.syncRunner = new SyncRunner();
   }
 

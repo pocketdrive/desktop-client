@@ -7,8 +7,9 @@ import {SyncService} from "../providers/sync.service";
 import {MountService} from "../providers/mount.service";
 import {NisService} from "../providers/nis.service";
 import {PocketDrive} from "../models/pocketdrive";
+import {environment} from "environments";
 
-const ipc = require('electron').ipcRenderer
+const ipc = require('electron').ipcRenderer;
 
 @Component({
   selector: 'app-home',
@@ -24,10 +25,21 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
               private syncService: SyncService,
-              private nisService:NisService,
+              private nisService: NisService,
               private mountService: MountService) {
     HomeComponent.loadAdminLTEScripts();
+
+    this.mountService.init();
+    this.nisService.init();
+    this.syncService.init();
+
     this.pocketDrive = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
+
+    // Loading environment varibales from local storage and setting it to memory.
+    environment['PD_FOLDER_PATH'] = LocalStorageService.getItem(Constants.localStorageKeys.PD_FOLDER_PATH);
+    environment['NE_DB_PATH_CHECKSUM'] = LocalStorageService.getItem(Constants.localStorageKeys.NE_DB_PATH_CHECKSUM);
+    environment['NE_DB_PATH_SYNC_METADATA'] = LocalStorageService.getItem(Constants.localStorageKeys.NE_DB_PATH_SYNC_METADATA);
+
   }
 
   ngOnInit() {

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { ipcRenderer } from 'electron';
+import {ipcRenderer} from 'electron';
 import * as childProcess from 'child_process';
 
 @Injectable()

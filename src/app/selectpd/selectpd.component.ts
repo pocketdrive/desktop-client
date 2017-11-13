@@ -49,9 +49,12 @@ export class SelectpdComponent implements OnInit {
     const currentPd: PocketDrive = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
 
     environment['PD_FOLDER_PATH'] = path.resolve(environment.USER_HOME_OF_CLIENT, 'PocketDrive', this.getSanitizedName(currentPd.name)) + path.sep;
-    // environment['NIS_DATA_PATH'] = path.resolve(environment.USER_HOME_OF_CLIENT, '.PocketDrive', this.getSanitizedName(currentPd.uuid), 'nis-data') + path.sep;
     environment['NE_DB_PATH_CHECKSUM'] = path.resolve(environment.USER_HOME_OF_CLIENT, '.PocketDrive', this.getSanitizedName(currentPd.uuid), 'checksum.db');
     environment['NE_DB_PATH_SYNC_METADATA'] = path.resolve(environment.USER_HOME_OF_CLIENT, '.PocketDrive', this.getSanitizedName(currentPd.uuid), 'sync_metadata.db');
+
+    LocalStorageService.setItem(Constants.localStorageKeys.PD_FOLDER_PATH, path.resolve(environment.USER_HOME_OF_CLIENT, 'PocketDrive', this.getSanitizedName(currentPd.name)) + path.sep);
+    LocalStorageService.setItem(Constants.localStorageKeys.NE_DB_PATH_CHECKSUM, path.resolve(environment.USER_HOME_OF_CLIENT, '.PocketDrive', this.getSanitizedName(currentPd.uuid), 'checksum.db'));
+    LocalStorageService.setItem(Constants.localStorageKeys.NE_DB_PATH_SYNC_METADATA, path.resolve(environment.USER_HOME_OF_CLIENT, '.PocketDrive', this.getSanitizedName(currentPd.uuid), 'sync_metadata.db'));
 
     this.router.navigate(['signin']);
   }

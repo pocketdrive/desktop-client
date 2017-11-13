@@ -20,6 +20,16 @@ export class HttpInterceptor extends Http {
     super(backend, defaultOptions);
   }
 
+  init(): void {
+    this.token = null;
+    this.baseUrl = null;
+    this.baseUrlWithoutPort = null;
+
+    this.getToken();
+    this.getFullUrl("");
+    this.getUrlWithoutPort();
+  }
+
   /**
    * Performs a request with `get` http method.
    * @param url

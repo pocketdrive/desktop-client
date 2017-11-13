@@ -27,6 +27,11 @@ export class PocketDriveService {
   constructor(private router: Router) {
   }
 
+  init(): void{
+    this.localPDs = [];
+    this.remotePDs = [];
+  }
+
   getPD(type: string, uuid: string): PocketDrive {
     if (type == 'local') {
       return this.localPDs.find(pd => pd.uuid === uuid);

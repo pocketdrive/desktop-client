@@ -9,10 +9,14 @@ export const environment = {
 
   USER_HOME_OF_CLIENT:'/home/dulaj',
 
-  // PD_FOLDER_PATH: '',
   NIS_DATA_PATH: '/home/dulaj/.PocketDrive/nis-data',
 
+  // PD_FOLDER_PATH: '/home/dulaj/PocketDrive/home-pd',
   // NE_DB_PATH_CHECKSUM: '/home/dulaj/.PocketDrive/home-pd/checksum.db',
   // NE_DB_PATH_SYNC_METADATA: '/home/dulaj/.PocketDrive/home-pd/sync_metadata.db',
+
+  // PD_FOLDER_PATH: LocalStorageService.getItem(Constants.localStorageKeys.PD_FOLDER_PATH),
+  // NE_DB_PATH_CHECKSUM: LocalStorageService.getItem(Constants.localStorageKeys.NE_DB_PATH_CHECKSUM),
+  // NE_DB_PATH_SYNC_METADATA: LocalStorageService.getItem(Constants.localStorageKeys.NE_DB_PATH_SYNC_METADATA),
   NE_DB_PATH_NIS_METADATA: '/home/dulaj/.PocketDrive/nis_metadata.db'
 };

@@ -61,6 +61,8 @@ export default class NisCommunicator {
   requestFileHashes() {
     const sock = this.sock;
 
+    console.log('[NIS][SERVER_TO_CARRIER]');
+
     // Get the events from the pd.
     sock.emit('message', {
       type: 'getEvents',
@@ -155,6 +157,8 @@ export default class NisCommunicator {
     });*/
 
     // Get the events from the carrier
+    console.log('[NIS][CARRIER_TO_SERVER]');
+
     const eventsFromCarrier = (await NisClientDbHandler.getOrderedOperations(this.deviceId, this.username, true)).data;
     const foldersToDelete = [];
 

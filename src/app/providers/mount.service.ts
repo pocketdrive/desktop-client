@@ -24,6 +24,10 @@ export class MountService {
   user: User;
 
   constructor() {
+    // this.init();
+  }
+
+  init(): void {
     this.autoMount = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.autoMount));
     this.mountOnOff = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.autoMount));
     // this.mountOnOff = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.mountOnOff));

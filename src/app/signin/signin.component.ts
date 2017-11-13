@@ -25,6 +25,7 @@ export class SigninComponent implements OnInit {
               private location: Location,
               private userService: UserService,
               private httpInterceptor: HttpInterceptor) {
+    this.httpInterceptor.init();
   }
 
   ngOnInit(): void {

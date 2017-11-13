@@ -9,6 +9,7 @@ import {PocketDriveService} from "../providers/pd.service";
 export class SplashComponent implements OnInit {
 
   constructor(private pocketDriveService: PocketDriveService) {
+    this.pocketDriveService.init();
   }
 
   ngOnInit() {

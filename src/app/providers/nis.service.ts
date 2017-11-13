@@ -9,8 +9,6 @@ import {Constants} from "../constants";
 import {PocketDrive} from "../models/pocketdrive";
 import {NisRunner} from '../sync-engine/nis-runner';
 
-import NisCommunicator from '../communicator/nis-communicator';
-
 @Injectable()
 export class NisService {
 
@@ -18,9 +16,8 @@ export class NisService {
 
   folders: NisFolder[];
   nisRunner: NisRunner;
-  user: User;
   remotePds: PocketDrive[];
-  nisCommunicator: NisCommunicator;
+  user: User;
   currentDeviceId: string;
 
   /**
@@ -38,6 +35,10 @@ export class NisService {
 
   constructor(private http: HttpInterceptor,
               private angularHttp: Http) {
+    // this.init();
+  }
+
+  init(): void {
     this.user = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser));
     this.deviceMap = LocalStorageService.getItem(Constants.localStorageKeys.nisDeviceMap);
     this.currentDeviceId = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).uuid.trim();
@@ -58,7 +59,7 @@ export class NisService {
   }
 
   start(): void {
-    this.nisRunner = new NisRunner(this.currentDeviceId,this.user.username, this.deviceMap[this.currentDeviceId]);
+    this.nisRunner = new NisRunner(this.currentDeviceId, this.user.username, this.deviceMap[this.currentDeviceId]);
     this.nisRunner.start();
   }
 
