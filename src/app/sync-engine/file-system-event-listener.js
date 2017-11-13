@@ -26,7 +26,8 @@ export default class FileSystemEventListener {
     this.deviceIDs = deviceIDs;
     this.folder = folder;
 
-    this.baseDirectory = path.resolve(this.pdPath, this.folder);
+    // this.baseDirectory = path.resolve(this.pdPath, this.folder);
+    this.baseDirectory = this.pdPath;
     this.hashtable = {};
     this.data = {};
     this.changes = [];

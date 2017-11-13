@@ -16,21 +16,24 @@ export class SyncRunner {
 
   constructor() {
     this.serializeLock = 0;
-    this.eventListeners = {};
+    // this.eventListeners = {};
     this.username = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.loggedInuser)).username;
     this.ip = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd)).ip;
   }
 
-  async startSync(syncFolders) {
+  async startSync() {
     await MetadataDBHandler.getNextSequenceID().then((result) => {
       FileSystemEventListener.sequenceID = result.data;
     });
 
-    _.each(syncFolders, (folder) => {
-      this.addNewSyncDirectory(this.username, folder.name);
-    });
-
     this.communicator = new SyncCommunicator(this.username, this.ip);
+    this.fileWatcher = new FileSystemEventListener(this.username, "", []);  // TODO: device ids
+    this.fileWatcher.start();
+
+    /*_.each(syncFolders, (folder) => {
+      this.addNewSyncDirectory(this.username, folder.name);
+    });*/
+
 
     this.syncInervalId = setInterval(() => {
       if (this.serializeLock === 0 && !FileSystemEventListener.isWatcherRunning) {
@@ -41,17 +44,18 @@ export class SyncRunner {
   }
 
   stopSync() {
-    _.each(this.eventListeners, (listener) => {
+    /*_.each(this.eventListeners, (listener) => {
       listener.stop();
-    });
+    });*/
 
+    this.fileWatcher.stop();
     clearTimeout(this.syncInervalId);
     this.communicator.destroy();
   }
 
-  refreshSyncDirectories() {
+  /*refreshSyncDirectories() {
     console.log('Restarting sync engine');
-    
+
     _.each(this.eventListeners, (listener) => {
       listener.stop();
     });
@@ -74,7 +78,7 @@ export class SyncRunner {
   removeSyncDirectory(folder) {
     this.eventListeners[folder].stop();
     delete this.eventListeners[folder];
-  }
+  }*/
 
   async doSync() {
     console.log('[SYNC][CLIENT_TO_SERVER]');

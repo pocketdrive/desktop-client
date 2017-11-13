@@ -34,12 +34,12 @@ export class SyncService {
       .then((response) => this.folders = response.json())
       .catch(this.handleError);
 
-    this.saveSyncFoldersToLocalStorage();
+    // this.saveSyncFoldersToLocalStorage();
     return this.folders;
   }
 
   setSyncFolderList(foldersList: Folder[]): void {
-    this.saveSyncFoldersToLocalStorage();
+    // this.saveSyncFoldersToLocalStorage();
 
     let message = {type: 'setSyncFolders', data: {deviceId: environment.deviceId}};
     let syncFolders = [];
@@ -60,7 +60,7 @@ export class SyncService {
       .then((response) => response.json())
       .catch(this.handleError);
 
-    this.syncRunner.refreshSyncDirectories();
+    // this.syncRunner.refreshSyncDirectories();
   }
 
   private handleError(error: any): void {
@@ -70,7 +70,7 @@ export class SyncService {
   /**
    * Save current sync folders list to local storage
    */
-  saveSyncFoldersToLocalStorage(): void {
+  /*saveSyncFoldersToLocalStorage(): void {
     let syncFolders: Folder[] = [];
 
     for (let i = 0; i < this.folders.length; i++) {
@@ -80,11 +80,11 @@ export class SyncService {
     }
 
     LocalStorageService.setItem(Constants.localStorageKeys.syncFolders, JSON.stringify(syncFolders));
-  }
+  }*/
 
   startSync(): void {
-    let syncFolders = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.syncFolders));
-    this.syncRunner.startSync(syncFolders);
+    // let syncFolders = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.syncFolders));
+    this.syncRunner.startSync();
   }
 
   stopSync(): void {
