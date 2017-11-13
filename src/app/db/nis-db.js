@@ -1,4 +1,4 @@
-import * as databases from './dbs';
+import Databases from "./dbs";
 
 /**
  * @author Anuradha Wickramarachchi
@@ -9,7 +9,7 @@ export default class NisClientDbHandler {
     let result = {success: false};
 
     return new Promise((resolve) => {
-      databases.nisClientDb.find({deviceID: deviceId}).sort({sequence_id: -1}).limit(1).exec((err, docs) => {
+      Databases.nisClientDb.find({deviceID: deviceId}).sort({sequence_id: -1}).limit(1).exec((err, docs) => {
         if (err) {
           this.handleError(result, 'DB Error. Cannot get max sequenceID', err);
         } else {
@@ -26,7 +26,7 @@ export default class NisClientDbHandler {
     let result = {success: false};
 
     return new Promise((resolve) => {
-      databases.nisClientDb.find({
+      Databases.nisClientDb.find({
         otherDeviceID: otherDeviceId,
         user: username,
         fileFetched: fileFetched
@@ -44,7 +44,7 @@ export default class NisClientDbHandler {
   }
 
   static upsertEntry(entry) {
-    databases.nisClientDb.update(
+    Databases.nisClientDb.update(
       {
         user: entry.user,
         otherDeviceID: entry.otherDeviceID,
@@ -54,7 +54,7 @@ export default class NisClientDbHandler {
   }
 
   static removeEvent(id) {
-    databases.nisClientDb.remove({_id: id}, (err, numDeleted) => {
+    Databases.nisClientDb.remove({_id: id}, (err, numDeleted) => {
     });
   }
 }

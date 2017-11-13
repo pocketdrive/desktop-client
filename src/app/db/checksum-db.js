@@ -1,8 +1,8 @@
 /**
  * @author Dulaj Atapattu
  */
-import * as databases from './dbs';
-import * as _ from 'lodash'
+import * as _ from 'lodash';
+import Databases from "./dbs";
 
 export default class ChecksumDBHandler {
 
@@ -10,7 +10,7 @@ export default class ChecksumDBHandler {
     let result = {success: false};
 
     await new Promise((resolve) => {
-      databases.checkSumDB.update({path: path}, {
+      Databases.checkSumDB.update({path: path}, {
         path: path,
         synced_cs: checksum
       }, {upsert: true}, function (err, numReplaced) {
@@ -28,7 +28,7 @@ export default class ChecksumDBHandler {
     let result = {success: false};
 
     return new Promise((resolve) => {
-      databases.checkSumDB.findOne({path: path}, (err, doc) => {
+      Databases.checkSumDB.findOne({path: path}, (err, doc) => {
         if (err) {
           this.handleError(result, 'Database error. Cannot read checksum', err);
         } else {
@@ -54,11 +54,11 @@ export default class ChecksumDBHandler {
     // TODO: Warning: This regex is not working with spaces
     const regex = new RegExp(oldPath);
 
-    databases.checkSumDB.find({path: {$regex: regex}}, (err, docs) => {
+    Databases.checkSumDB.find({path: {$regex: regex}}, (err, docs) => {
       _.each(docs, (doc) => {
         const oldFilePath = doc.path;
         const newFilePath = _.replace(oldFilePath, oldPath, newPath);
-        databases.checkSumDB.update({path: oldFilePath}, {$set: {path: newFilePath}}, {}, (err, numReplaced) => {
+        Databases.checkSumDB.update({path: oldFilePath}, {$set: {path: newFilePath}}, {}, (err, numReplaced) => {
         });
       });
     });

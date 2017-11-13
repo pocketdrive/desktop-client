@@ -50,6 +50,8 @@ export class SyncRunner {
   }
 
   refreshSyncDirectories() {
+    console.log('Restarting sync engine');
+    
     _.each(this.eventListeners, (listener) => {
       listener.stop();
     });

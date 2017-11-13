@@ -7,6 +7,7 @@ import {SyncService} from "../providers/sync.service";
 import {MountService} from "../providers/mount.service";
 import {NisService} from "../providers/nis.service";
 import {PocketDrive} from "../models/pocketdrive";
+import Databases from "../db/dbs";
 import {environment} from "environments";
 
 const ipc = require('electron').ipcRenderer;
@@ -32,6 +33,7 @@ export class HomeComponent implements OnInit {
     this.mountService.init();
     this.nisService.init();
     this.syncService.init();
+    Databases.init();
 
     this.pocketDrive = JSON.parse(LocalStorageService.getItem(Constants.localStorageKeys.selectedPd));
 
