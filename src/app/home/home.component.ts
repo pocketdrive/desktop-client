@@ -70,6 +70,7 @@ export class HomeComponent implements OnInit {
 
   signOut(): void {
     this.syncService.stopSync();
+    this.nisService.stopNis();
 
     if (this.mountService.autoMount || this.mountService.mountOnOff) {
       this.mountService.unmount().then(() => {
