@@ -41,7 +41,6 @@ export class SyncRunner {
   }
 
   async doSync() {
-    console.log('[SYNC][CLIENT_TO_SERVER]');
     this.serializeLock++;
 
     await MetadataDBHandler.getChanges().then(async (changes) => {
@@ -52,6 +51,7 @@ export class SyncRunner {
         if (!this.communicator.serverSyncCalled) {
           if (this.communicator.serializeLock === 0) {
             if (i < changes.length) {
+              console.log('[SYNC][CLIENT_TO_SERVER]');
               await this.communicator.sendSyncRequest(changes[i++]);
             }
             else {
