@@ -61,8 +61,6 @@ export default class NisCommunicator {
   requestFileHashes() {
     const sock = this.sock;
 
-    console.log('[NIS][SERVER_TO_CARRIER]');
-
     // Get the events from the pd.
     sock.emit('message', {
       type: 'getEvents',
