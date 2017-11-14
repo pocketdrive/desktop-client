@@ -60,7 +60,7 @@ export class NisService {
 
   start(): void {
     this.nisRunner = new NisRunner(this.currentDeviceId, this.user.username, this.deviceMap[this.currentDeviceId]);
-    this.nisRunner.start();
+    this.nisRunner.startNis();
   }
 
   afterLoadingRemotePds(response) {
