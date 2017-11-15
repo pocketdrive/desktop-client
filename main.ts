@@ -22,16 +22,16 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     x: 0,
     y: 0,
-    width: size.width,
-    height: size.height
-    // width: 880,
-    // height: 660
+    // width: size.width,
+    // height: size.height
+    width: 880,
+    height: 660
   });
 
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   if (serve) {
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   }
 
   mainWindow.on('closed', () => {

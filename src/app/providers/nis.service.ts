@@ -128,4 +128,8 @@ export class NisService {
     console.error('Error handler [SyncService]', error);
   }
 
+  stopNis(): void {
+    this.nisRunner.stopNis();
+  }
+
 }

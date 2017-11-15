@@ -58,6 +58,11 @@ export default class NisCommunicator {
 
   }
 
+  closeSocket() {
+    console.log('Closing NIS socket for device id ', this.deviceId);
+    this.sock.disconnect();
+  }
+
   requestFileHashes() {
     const sock = this.sock;
 
