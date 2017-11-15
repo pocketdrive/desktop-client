@@ -72,7 +72,7 @@ export class MountService {
   }
 
   private mountLinux(): void {
-    const command = 'mount -t cifs -o username=' + this.samba.username + ',password=' + this.samba.password + ' //' + this.pocketDrive.ip + '/' + this.user.username + ' ~/PocketDrive';
+    const command = 'mount -t cifs -o username=' + this.samba.username + ',password=' + this.samba.password + ' //' + this.pocketDrive.ip + '/' + this.user.username + ' ~/PD';
 
     // noinspection JSUnusedLocalSymbols
     sudo.exec(command, options, (error, stdout, stderr) => {
@@ -85,7 +85,7 @@ export class MountService {
   }
 
   private unmountLinux(): Promise<any> {
-    const command = 'umount ~/PocketDrive';
+    const command = 'umount ~/PD';
 
     return new Promise((resolve) => {
       // noinspection JSUnusedLocalSymbols
@@ -95,7 +95,7 @@ export class MountService {
           this.mountOnOff = !this.mountOnOff;
           LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
         } else {
-          resolve(error);
+          resolve();
         }
       });
     });
@@ -128,11 +128,33 @@ export class MountService {
   }
 
   private mountMac(): void {
-    // TODO
+    const command = 'mount -t cifs -o username=' + this.samba.username + ',password=' + this.samba.password + ' //' + this.pocketDrive.ip + '/' + this.user.username + ' ~/PD';
+
+    // noinspection JSUnusedLocalSymbols
+    sudo.exec(command, options, (error, stdout, stderr) => {
+      if (error) {
+        console.error("Mount failed: ", error);
+        this.mountOnOff = !this.mountOnOff;
+        LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
+      }
+    });
   }
 
-  private unmountMac(): void {
-    // TODO
+  private unmountMac():  Promise<any> {
+    const command = 'umount ~/PD';
+
+    return new Promise((resolve) => {
+      // noinspection JSUnusedLocalSymbols
+      sudo.exec(command, options, (error, stdout, stderr) => {
+        if (error) {
+          console.error("Unmount failed: ", error);
+          this.mountOnOff = !this.mountOnOff;
+          LocalStorageService.setItem(Constants.localStorageKeys.mountOnOff, JSON.stringify(this.mountOnOff));
+        } else {
+          resolve(error);
+        }
+      });
+    });
   }
 
 }
